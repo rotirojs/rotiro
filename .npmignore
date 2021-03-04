@@ -1,0 +1,7 @@
+.npmignore
+/browser/
+/.idea/
+/test/
+/examples/
+/src/
+.prettierrc.json
