@@ -3,5 +3,6 @@
 /.idea/
 /test/
 /examples/
+/coverage/
 /src/
 .prettierrc.json

@@ -1,12 +1,13 @@
-import { AuthenticatorFunc } from "../type-defs";
+import { AuthenticatorFunc } from '../type-defs';
 
 export class Authenticators {
-  public get locked(): boolean {
-    return this._locked;
-  }
   private authenticators: Record<string, AuthenticatorFunc> = {};
 
   private _locked: boolean = false;
+
+  public get locked(): boolean {
+    return this._locked;
+  }
 
   public lock(): void {
     this._locked = true;
@@ -14,7 +15,7 @@ export class Authenticators {
 
   public add(authTokenName: string, authenticator: AuthenticatorFunc) {
     if (this._locked) {
-      throw new Error("Api is locked and cannot be updated");
+      throw new Error('Api is locked and cannot be updated');
     }
 
     this.authenticators[authTokenName] = authenticator;
@@ -38,6 +39,6 @@ export class Authenticators {
       return authenticator;
     }
 
-    throw new Error("Auth token not supported");
+    throw new Error('Auth token not supported');
   }
 }

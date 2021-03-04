@@ -1,23 +1,20 @@
-// import { Request, Response } from "express";
-// import { createRequest } from "../services/create-request";
-import { sendResponse } from "../services/send-response";
-import {
-  ApiRequest,
-  AuthenticatorFunc,
-  ErrorMessage,
-  RestMethods
-} from "../type-defs";
-import { cleanBasePath, trimString } from "../utils";
-import { Authenticators } from "./authenticators";
-import { Controllers } from "./controllers";
-import { Endpoints } from "./endpoints";
-import { Mappers } from "./mappers";
-import { Routes } from "./routes";
-import {createRequest} from '../services/create-request';
+import { createRequest } from '../services/create-request';
+import { AuthenticatorFunc, ErrorMessage, RestMethods } from '../type-defs';
+import { cleanBasePath } from '../utils';
+import { Authenticators } from './authenticators';
+import { Controllers } from './controllers';
+import { Endpoints } from './endpoints';
+import { Mappers } from './mappers';
+import { Routes } from './routes';
 
 export class Api {
+
   public get controllers(): Controllers {
     return this._controllers;
+  }
+
+  public get routes(): Routes {
+    return this._routes;
   }
 
   public get endpoints(): Endpoints {
@@ -37,17 +34,16 @@ export class Api {
   }
 
   public static create(basePath?: string): Api {
-    return new Api(basePath || "");
+    return new Api(basePath || '');
   }
 
-  // seperate the reading of the request so that it can be replaced by middleware later
   // to handle alternatives to express
   private static extractRequestDetails(
     request: any,
     basePath: string
   ): { method: RestMethods; body: any; fullPath: string } {
     if (!request.originalUrl || !request.method) {
-      throw new Error("Original request not valid");
+      throw new Error('Original request not valid');
     }
 
     let fullPath = cleanBasePath(request.originalUrl);
@@ -57,19 +53,19 @@ export class Api {
       fullPath = fullPath.substr(basePath.length);
     }
     const method: RestMethods = request.method.toUpperCase() as RestMethods;
-    const body: object = ["PUT", "PATCH", "POST"].includes(method)
+    const body: object = ['PUT', 'PATCH', 'POST'].includes(method)
       ? request.body
       : {};
 
     return { fullPath, method, body };
   }
-
   private readonly _routes: Routes;
   private readonly _authenticators: Authenticators;
   private readonly _endpoints: Endpoints;
   private readonly _controllers: Controllers;
   private readonly _mappers: Mappers;
   private readonly basePath: string;
+
   private _locked: boolean = false;
 
   private constructor(basePath: string) {
@@ -79,7 +75,7 @@ export class Api {
     this._endpoints = new Endpoints();
     this._controllers = new Controllers();
     this._mappers = new Mappers();
-    this._routes = new Routes(this._endpoints, this._controllers);
+    this._routes = new Routes(this.endpoints, this.controllers);
   }
 
   public build(): void {
@@ -93,7 +89,7 @@ export class Api {
 
     if (controllerErrors.length) {
       const errorMessage: string = `Not all endpoints have a controller (${controllerErrors.join(
-        ", "
+        ', '
       )})`;
       throw new Error(errorMessage);
     }
@@ -106,7 +102,7 @@ export class Api {
       );
       if (authenticatorErrors.length) {
         const errorMessage: string = `One or more auth tokens to not have a handler (${authenticatorErrors.join(
-          ", "
+          ', '
         )})`;
         throw new Error(errorMessage);
       }
@@ -123,7 +119,7 @@ export class Api {
     const self = this;
     return async (request: any, response: any) => {
       if (!self.locked) {
-        throw new Error("Api not built");
+        throw new Error('Api not built');
       }
 
       const {
@@ -157,7 +153,7 @@ export class Api {
           // throw an error
           return self.sendError(response, {
             statusCode: 401,
-            message: "Unauthorized"
+            message: 'Unauthorized'
           });
         }
       }
@@ -172,7 +168,7 @@ export class Api {
       } catch (ex) {
         // look for a particular error structure and return
         // otherwise return a 500
-        self.sendError(response, { statusCode: 500, message: "Unknown error" });
+        self.sendError(response, { statusCode: 500, message: 'Unknown error' });
       }
     };
   }
@@ -186,7 +182,7 @@ export class Api {
   //   sendResponse(apiRequest, body, status, contentType);
   // }
 
-  private sendError(response: Response, error: ErrorMessage) {
+  private sendError(response: any, error: ErrorMessage) {
     // This needs to manage more than just express in the future
     // add middleware hook to manage sending a response
     response.status(error.statusCode).send(error);

@@ -1,5 +1,9 @@
-import { Mappers } from "../../classes/mappers";
-import { ApiRequestParam, MethodSchemaParam } from "../../type-defs";
+import { Mappers } from '../../classes/mappers';
+import {
+  ApiRequestParam,
+  MethodSchemaParam,
+  RouteParameter
+} from '../../type-defs';
 
 export function getBodyParams(
   body: any,
@@ -9,7 +13,7 @@ export function getBodyParams(
   const bodyParams: Record<string, ApiRequestParam> = {};
 
   if (bodySchema.length) {
-    if (typeof body === "undefined") {
+    if (typeof body === 'undefined') {
       for (const bodyParameter of bodySchema) {
         let value: any;
         let valid: boolean = false;
@@ -34,7 +38,7 @@ export function getBodyParams(
     for (const bodyParameter of bodySchema) {
       let value: any | any[];
       let valid: boolean = true;
-      if (typeof body[bodyParameter.name] === "undefined") {
+      if (typeof body[bodyParameter.name] === 'undefined') {
         if (!bodyParameter.optional) {
           valid = false;
         } else {
@@ -55,7 +59,7 @@ export function getBodyParams(
             body[bodyParameter.name],
             bodyParameter.type
           );
-          valid = typeof value !== "undefined";
+          valid = typeof value !== 'undefined';
         }
       }
 
@@ -69,4 +73,33 @@ export function getBodyParams(
   }
 
   return bodyParams;
+}
+
+export function assignBodyParam(
+  routeParams: Record<string, RouteParameter>
+): MethodSchemaParam[] {
+  const schemaParams: MethodSchemaParam[] = [];
+
+  const propKeys: string[] = Object.keys(routeParams);
+  if (propKeys.length > 0) {
+    for (const propKey of propKeys) {
+      const routeParameter: RouteParameter = routeParams[propKey];
+
+      const schemaParam: MethodSchemaParam = {
+        type: routeParameter.type,
+        name: propKey
+      };
+
+      if (routeParameter.array) {
+        schemaParam.array = true;
+      }
+
+      if (routeParameter.optional) {
+        schemaParam.optional = true;
+      }
+
+      schemaParams.push(schemaParam);
+    }
+  }
+  return schemaParams;
 }

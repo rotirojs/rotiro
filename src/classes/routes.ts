@@ -1,19 +1,22 @@
 import {
   MethodSchema,
-  MethodSchemaParam,
   PathSchemaParam,
   RestMethods,
   RouteConfig,
   RouteMethod,
-  RouteParameter,
   RoutePathParameter
-} from "../type-defs";
-import { Controllers } from "./controllers";
-import { Endpoints } from "./endpoints";
+} from '../type-defs';
+import { assignBodyParam } from '../utils/request-params';
+import { Controllers } from './controllers';
+import { Endpoints } from './endpoints';
 
 export class Routes {
-  private _locked: boolean = false;
 
+  public get locked(): boolean {
+    return this._locked;
+  }
+
+  private _locked: boolean = false;
   constructor(
     private readonly endpoints: Endpoints,
     private readonly controllers: Controllers
@@ -23,13 +26,9 @@ export class Routes {
     this._locked = true;
   }
 
-  public get locked(): boolean {
-    return this._locked;
-  }
-
   public add(name: string, path: string, config: RouteConfig) {
     if (this.locked) {
-      throw new Error("Api is locked and cannot be updated");
+      throw new Error('Api is locked and cannot be updated');
     }
 
     const pathParams: PathSchemaParam[] = [];
@@ -37,7 +36,7 @@ export class Routes {
     if (config.path) {
       for (const key of Object.keys(config.path)) {
         let pathParamType: string;
-        if (typeof config.path[key] === "string") {
+        if (typeof config.path[key] === 'string') {
           pathParamType = config.path[key] as string;
         } else {
           pathParamType = (config.path[key] as RoutePathParameter).type;
@@ -51,7 +50,7 @@ export class Routes {
 
     const supportedMethods = Object.keys(config.methods);
     if (!supportedMethods.length) {
-      throw new Error("No methods defined");
+      throw new Error('No methods defined');
     }
 
     for (const method of supportedMethods) {
@@ -74,33 +73,4 @@ export class Routes {
 
     this.endpoints.add(name, path, methods, pathParams);
   }
-}
-
-function assignBodyParam(
-  routeParams: Record<string, RouteParameter>
-): MethodSchemaParam[] {
-  const schemaParams: MethodSchemaParam[] = [];
-
-  const propKeys: string[] = Object.keys(routeParams);
-  if (propKeys.length > 0) {
-    for (const propKey of propKeys) {
-      const routeParameter: RouteParameter = routeParams[propKey];
-
-      const schemaParam: MethodSchemaParam = {
-        type: routeParameter.type,
-        name: propKey
-      };
-
-      if (routeParameter.array) {
-        schemaParam.array = true;
-      }
-
-      if (routeParameter.optional) {
-        schemaParam.optional = true;
-      }
-
-      schemaParams.push(schemaParam);
-    }
-  }
-  return schemaParams;
 }

@@ -1,4 +1,4 @@
-import { ControlerFunc, RestMethods } from "../type-defs";
+import { ControlerFunc, RestMethods } from '../type-defs';
 
 export class Controllers {
   private controllers: Record<string, Record<string, ControlerFunc>> = {};
@@ -8,12 +8,12 @@ export class Controllers {
   //   // ref to endpoints
   // }
 
-  public lock(): void {
-    this._locked = true;
-  }
-
   public get locked(): boolean {
     return this._locked;
+  }
+
+  public lock(): void {
+    this._locked = true;
   }
 
   public add(
@@ -22,7 +22,7 @@ export class Controllers {
     controller: ControlerFunc
   ) {
     if (this._locked) {
-      throw new Error("Api is locked and cannot be updated");
+      throw new Error('Api is locked and cannot be updated');
     }
 
     if (!this.controllers[routeName]) {
@@ -40,7 +40,7 @@ export class Controllers {
       const controllers = this.controllers[route.routeName];
       if (controllers) {
         for (const method of route.methods) {
-          if (typeof controllers[method] === "undefined") {
+          if (typeof controllers[method] === 'undefined') {
             errors.push(`${route.routeName}:${method}`);
           }
         }
@@ -60,6 +60,6 @@ export class Controllers {
       return controllers[method];
     }
 
-    throw new Error("Route not supported");
+    throw new Error('Route not supported');
   }
 }

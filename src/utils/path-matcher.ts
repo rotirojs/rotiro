@@ -1,4 +1,4 @@
-import { RouteNamePattern } from "../type-defs";
+import { RouteNamePattern } from '../type-defs';
 
 export function getRouteName(path: string, paths: RouteNamePattern[]): string {
   for (const endpoint of paths) {
@@ -8,5 +8,5 @@ export function getRouteName(path: string, paths: RouteNamePattern[]): string {
     }
   }
 
-  return "";
+  return '';
 }

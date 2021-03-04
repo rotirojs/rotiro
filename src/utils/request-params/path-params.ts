@@ -1,5 +1,5 @@
-import { Mappers } from "../../classes/mappers";
-import { ApiEndpointSchema, ApiRequestParam } from "../../type-defs";
+import { Mappers } from '../../classes/mappers';
+import { ApiEndpointSchema, ApiRequestParam } from '../../type-defs';
 
 export function getPathParams(
   path: string,
@@ -11,7 +11,7 @@ export function getPathParams(
     // get the names and values from the path
     let params: string[] | null = path.match(endpoint.pattern);
     if (!params) {
-      throw new Error("Invalid parameters");
+      throw new Error('Invalid parameters');
     }
     params = params.slice(1, endpoint.pathParams.length + 1);
     for (let i = 0; i < endpoint.pathParams.length; i++) {
@@ -23,7 +23,7 @@ export function getPathParams(
       const requestParam: ApiRequestParam = {
         ...endpoint.pathParams[i],
         value,
-        valid: typeof value !== "undefined"
+        valid: typeof value !== 'undefined'
       };
       pathParams[requestParam.name] = requestParam;
     }

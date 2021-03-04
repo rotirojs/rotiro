@@ -1,4 +1,4 @@
 /* istanbul ignore file */
-export * from "./api";
-export * from "./controllers";
-export * from "./endpoints";
+export * from './api';
+export * from './controllers';
+export * from './endpoints';

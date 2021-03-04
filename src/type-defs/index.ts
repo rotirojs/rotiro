@@ -1,4 +1,4 @@
-export type RestMethods = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
+export type RestMethods = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
 
 export interface ApiRequest {
   routeName: string; // name of matched endpoint

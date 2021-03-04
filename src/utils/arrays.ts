@@ -1,4 +1,4 @@
-import { trimString } from "./text";
+import { trimString } from './text';
 
 export function areListsEqual(list1: string[], list2: string[]): boolean {
   if (list1.length !== list2.length) {
@@ -26,11 +26,11 @@ export function areListsEqual(list1: string[], list2: string[]): boolean {
 export function extractStringArrayFromText(text: string): string[] {
   text = trimString(text);
   if (text) {
-    if (text.startsWith("[") && text.endsWith("]")) {
+    if (text.startsWith('[') && text.endsWith(']')) {
       text = trimString(text.substr(1, text.length - 2));
     }
     if (text) {
-      return text.split(",");
+      return text.split(',');
     }
   }
   return [];

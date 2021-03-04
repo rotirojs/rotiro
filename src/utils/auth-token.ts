@@ -1,15 +1,14 @@
-import { trimString } from "./text";
+import { trimString } from './text';
 
 export function getAuthToken(request: any, tokenName: string): string {
-
   if (!request) {
-    throw new Error("Invalid request");
+    throw new Error('Invalid request');
   }
 
   tokenName = trimString(tokenName).toLowerCase();
 
   if (!tokenName) {
-    throw new Error("Invalid token name");
+    throw new Error('Invalid token name');
   }
   if (request.headers) {
     for (const header of Object.keys(request.headers)) {
@@ -27,5 +26,5 @@ export function getAuthToken(request: any, tokenName: string): string {
     }
   }
 
-  return "";
+  return '';
 }

@@ -1,7 +1,7 @@
-import { Mappers } from "../../classes/mappers";
-import { ApiRequestParam, MethodSchemaParam } from "../../type-defs";
-import { extractStringArrayFromText } from "../arrays";
-import { getQueryAsObject } from "../paths";
+import { Mappers } from '../../classes/mappers';
+import { ApiRequestParam, MethodSchemaParam } from '../../type-defs';
+import { extractStringArrayFromText } from '../arrays';
+import { getQueryAsObject } from '../paths';
 
 export function getQueryParams(
   query: string,
@@ -17,7 +17,7 @@ export function getQueryParams(
     for (const schemaItem of querySchema) {
       let value: any | any[] = queryData[schemaItem.name];
       let valid = true;
-      if (typeof value === "undefined") {
+      if (typeof value === 'undefined') {
         if (!schemaItem.optional) {
           valid = false;
         } else if (schemaItem.array) {
@@ -31,7 +31,7 @@ export function getQueryParams(
         }
 
         value = mappers.mapDataType(value, schemaItem.type);
-        valid = typeof value !== "undefined";
+        valid = typeof value !== 'undefined';
       }
 
       queryParams[schemaItem.name] = {

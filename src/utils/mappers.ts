@@ -1,9 +1,9 @@
 export function stringMapper(text: any | any[]): string | string[] {
-  if (text === null || typeof text === "undefined") {
-    text = "";
+  if (text === null || typeof text === 'undefined') {
+    text = '';
   } else if (Array.isArray(text)) {
     return text.map((value: any) => stringMapper(value) as string);
-  } else if (typeof text !== "string") {
+  } else if (typeof text !== 'string') {
     text = text.toString();
   }
 

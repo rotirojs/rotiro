@@ -1,26 +1,27 @@
-import { pathToRegexp } from "path-to-regexp";
+import { pathToRegexp } from 'path-to-regexp';
 import {
   ApiEndpointSchema,
   MethodSchema,
   PathSchemaParam,
   RestMethods,
   RouteNamePattern
-} from "../type-defs";
-import { sanitisePath, trimString } from "../utils";
-import { areListsEqual } from "../utils/arrays";
+} from '../type-defs';
+import { sanitisePath, trimString } from '../utils';
+import { areListsEqual } from '../utils/arrays';
 
 export class Endpoints {
+
+  public get locked(): boolean {
+    return this._locked;
+  }
   private readonly endpoints: Record<string, ApiEndpointSchema>;
   private readonly paths: Record<string, string>;
+
   private _locked: boolean = false;
 
   constructor() {
     this.endpoints = {};
     this.paths = {};
-  }
-
-  public get locked(): boolean {
-    return this._locked;
   }
 
   public lock(): void {
@@ -50,7 +51,7 @@ export class Endpoints {
     const authTokenNames: Record<string, string> = {};
     Object.values(this.endpoints).forEach((endpoint: ApiEndpointSchema) => {
       Object.values(endpoint.methods).forEach((schema: MethodSchema) => {
-        const auth: string = trimString(schema.auth || "");
+        const auth: string = trimString(schema.auth || '');
         if (auth) {
           authTokenNames[auth] = auth;
         }
@@ -68,7 +69,7 @@ export class Endpoints {
 
   public get(name: string): ApiEndpointSchema {
     if (!this.endpoints[name]) {
-      throw new Error("Path not found");
+      throw new Error('Path not found');
     }
     return this.endpoints[name];
   }
@@ -80,16 +81,16 @@ export class Endpoints {
     pathParams: PathSchemaParam[] = []
   ): ApiEndpointSchema {
     if (this.locked) {
-      throw new Error("Api is locked and cannot be updated");
+      throw new Error('Api is locked and cannot be updated');
     }
 
     const routeName: string = trimString(name);
 
     if (!routeName.length) {
-      throw new Error("Invalid route name");
+      throw new Error('Invalid route name');
     }
     if (this.endpoints[routeName]) {
-      throw new Error("Route name already added");
+      throw new Error('Route name already added');
     }
 
     const routePath = sanitisePath(path);
@@ -108,14 +109,14 @@ export class Endpoints {
         })
       )
     ) {
-      throw new Error("Path parameters do not match schema");
+      throw new Error('Path parameters do not match schema');
     }
 
     if (!routePath.length) {
-      throw new Error("Invalid path");
+      throw new Error('Invalid path');
     }
     if (this.paths[routePath]) {
-      throw new Error("Path already added");
+      throw new Error('Path already added');
     }
 
     let endpointMethods: Record<string, MethodSchema>;

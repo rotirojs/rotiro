@@ -1,20 +1,20 @@
-import { Endpoints } from "../classes";
-import { Mappers } from "../classes/mappers";
+import { Endpoints } from '../classes';
+import { Mappers } from '../classes/mappers';
 import {
   ApiEndpointSchema,
   ApiRequest,
   MethodSchema,
   RestMethods,
   RouteNamePattern
-} from "../type-defs";
-import { splitFullPath } from "../utils";
-import { getRouteName } from "../utils/path-matcher";
+} from '../type-defs';
+import { splitFullPath } from '../utils';
+import { getRouteName } from '../utils/path-matcher';
 import {
   getBodyParams,
   getPathParams,
   getQueryParams
-} from "../utils/request-params";
-import { sendResponse } from "./send-response";
+} from '../utils/request-params';
+import { sendResponse } from './send-response';
 
 export function createRequest(
   fullPath: string,
