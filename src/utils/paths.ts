@@ -28,6 +28,10 @@ export function sanitisePath(path: string): string {
   // /test/:/something
   let routePath: string = trimString(path);
 
+  if (routePath === '/') {
+    return routePath;
+  }
+
   // append a slash
   if (!routePath.startsWith('/')) {
     routePath = `/${routePath}`;

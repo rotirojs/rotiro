@@ -106,6 +106,11 @@ describe('classes/endpoints', () => {
       }).toThrow('Path already added');
     });
 
+    it('should add a root endpoint with path /', () => {
+      const result = endpoints.add('home', '/', ['GET']);
+      expect(result).toBeTruthy()
+    });
+
     it('should accept config against methods', () => {
       const result = endpoints.add('Ping', '/ping', {
         GET: { queryParams: [{ name: 'id', type: 'string' }] }
