@@ -58,7 +58,6 @@ Configuring endpoints is as simple as
     api.routes.add('ping', '/ping', pingConfig);
     api.routes.add('users', '/users', usersConfig);
     api.routes.add('user', '/users/:id', userConfig);
-    api.routes.add('ping', '/ping', pingConfig);
 ```
 
 ## Features
