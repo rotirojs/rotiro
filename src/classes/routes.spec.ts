@@ -56,6 +56,20 @@ describe('classes/routes', () => {
       expect(api.endpoints.get('ping')).toBeTruthy();
     });
 
+    it('should add a route of / using a config', () => {
+      const routeConfig: RouteConfig = {
+        methods: {
+          GET: {
+            controller: jest.fn()
+          }
+        }
+      };
+      api.routes.add('home', '/', routeConfig);
+      api.build();
+      expect(api.controllers.get('home', 'GET')).toBeTruthy();
+      expect(api.endpoints.get('home')).toBeTruthy();
+    });
+
     it('should add a route with path parameters and return the correct payload', () => {
       const routeConfig: RouteConfig = {
         path: { id: 'string' },
