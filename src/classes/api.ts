@@ -1,5 +1,11 @@
 import { createRequest } from '../services/create-request';
-import { AuthenticatorFunc, ErrorMessage, RestMethods } from '../type-defs';
+import {
+  ApiOptions,
+  ApiRequest,
+  AuthenticatorFunc,
+  ErrorMessage,
+  RestMethods
+} from '../type-defs';
 import { cleanBasePath } from '../utils';
 import { Authenticators } from './authenticators';
 import { Controllers } from './controllers';
@@ -8,7 +14,6 @@ import { Mappers } from './mappers';
 import { Routes } from './routes';
 
 export class Api {
-
   public get controllers(): Controllers {
     return this._controllers;
   }
@@ -33,8 +38,8 @@ export class Api {
     return this._locked;
   }
 
-  public static create(basePath?: string): Api {
-    return new Api(basePath || '');
+  public static create(options: ApiOptions={}): Api {
+    return new Api(options);
   }
 
   // to handle alternatives to express
@@ -68,8 +73,8 @@ export class Api {
 
   private _locked: boolean = false;
 
-  private constructor(basePath: string) {
-    this.basePath = cleanBasePath(basePath);
+  private constructor(readonly options: ApiOptions) {
+    this.basePath = cleanBasePath(options.basePath || '');
 
     this._authenticators = new Authenticators();
     this._endpoints = new Endpoints();
@@ -132,13 +137,25 @@ export class Api {
         fullPath: string;
       } = Api.extractRequestDetails(request, this.basePath);
 
-      const apiRequest = createRequest(
-        fullPath,
-        method,
-        this.endpoints,
-        this.mappers,
-        body
-      );
+      let apiRequest: ApiRequest;
+      try {
+        apiRequest = createRequest(
+          fullPath,
+          method,
+          this.endpoints,
+          this.mappers,
+          body
+        );
+      } catch (ex) {
+        // check to see if the error should be handled automatically
+        if (!this.options.custom404 && ex.message === 'Path not found') {
+          // create a 404 response
+          response.status(404).send('Not Found');
+          return;
+        } else {
+          throw ex;
+        }
+      }
 
       apiRequest.request = request;
       apiRequest.response = response;
@@ -172,15 +189,6 @@ export class Api {
       }
     };
   }
-
-  // public sendResponse(
-  //   apiRequest: ApiRequest,
-  //   body: any,
-  //   status: number = 200,
-  //   contentType?: string
-  // ) {
-  //   sendResponse(apiRequest, body, status, contentType);
-  // }
 
   private sendError(response: any, error: ErrorMessage) {
     // This needs to manage more than just express in the future

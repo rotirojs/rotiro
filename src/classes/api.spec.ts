@@ -1,8 +1,9 @@
-import { AuthenticatorFunc } from '../type-defs';
+import { ApiOptions, AuthenticatorFunc } from '../type-defs';
 import { Api } from './api';
 import { Controllers } from './controllers';
 import { Endpoints } from './endpoints';
 import { Mappers } from './mappers';
+import { Routes } from './routes';
 
 // jest.mock("express", () => {
 //   return { Request: { path: "/ping" }, Response: {} };
@@ -19,6 +20,15 @@ describe('classes/api', () => {
       expect(api.controllers).toBeInstanceOf(Controllers);
       expect(api.endpoints).toBeInstanceOf(Endpoints);
       expect(api.mappers).toBeInstanceOf(Mappers);
+      expect(api.routes).toBeInstanceOf(Routes);
+    });
+
+    it('Should create a new API instance with options', () => {
+      api = Api.create({ basePath: '/', custom404: true });
+      expect(api.controllers).toBeInstanceOf(Controllers);
+      expect(api.endpoints).toBeInstanceOf(Endpoints);
+      expect(api.mappers).toBeInstanceOf(Mappers);
+      expect(api.routes).toBeInstanceOf(Routes);
     });
 
     it('Should initially be unlocked', () => {
@@ -138,13 +148,31 @@ describe('classes/api', () => {
       expect(calledWith.pathParams.id.value).toEqual('bob');
     });
 
-    it('Should should error if path not found', async () => {
+    it('Should should return 404 response if path not found', async () => {
+      const next = jest.fn();
+      const sendMock = jest.fn();
+      response.status = jest.fn().mockReturnValue({
+        send: sendMock
+      });
+      request.method = 'GET';
+      request.originalUrl = '/ping';
+      api.build();
+
+      await middleware(request, response, next);
+      expect(response.status).toBeCalledWith(404);
+      expect(sendMock).toBeCalledWith('Not Found');
+    });
+
+    it('Should should error if customError and path not found', async () => {
+      api = Api.create({ custom404: true });
+      middleware = api.router();
       const next = jest.fn();
       request.method = 'GET';
       request.originalUrl = '/ping';
       api.build();
       try {
         await middleware(request, response, next);
+        expect(response.status).toBeCalledWith(404);
       } catch (ex) {
         expect(ex).toEqual(new Error('Path not found'));
       }
@@ -222,7 +250,8 @@ describe('classes/api', () => {
 
     it('should process a route with a base path', async () => {
       const func = jest.fn();
-      api = Api.create('api');
+      const options: ApiOptions = { basePath: 'api' };
+      api = Api.create(options);
       api.endpoints.add('ping', '/ping', ['GET']);
       api.controllers.add('ping', 'GET', func);
       api.build();
@@ -236,7 +265,8 @@ describe('classes/api', () => {
 
     it('should fail a route without a base path', async () => {
       const func = jest.fn();
-      api = Api.create('api');
+      const options: ApiOptions = { basePath: 'api', custom404: true };
+      api = Api.create(options);
       api.endpoints.add('ping', '/ping', ['GET']);
       api.controllers.add('ping', 'GET', func);
       api.build();
@@ -251,35 +281,6 @@ describe('classes/api', () => {
       }
     });
   });
-
-  // describe('send response', () => {
-  //   it('should send a response', () => {
-  //     // Create an api request
-  //
-  //     const sendMock: any = jest.fn();
-  //     const response: any = {};
-  //     response.status = jest.fn().mockReturnValue({
-  //       send: sendMock
-  //     });
-  //     response.type = jest.fn();
-  //
-  //     const controllerFunc: any = jest.fn();
-  //     const api: Api = Api.create();
-  //     api.endpoints.add('ping', '/ping', ['GET']);
-  //     api.controllers.add('ping', 'GET', controllerFunc);
-  //     api.build();
-  //     const apiRequest = createRequest(
-  //       '/ping',
-  //       'GET',
-  //       api.endpoints,
-  //       api.mappers
-  //     );
-  //     apiRequest.response = response;
-  //     const body: any = { name: 'bob' };
-  //     api.sendResponse(apiRequest, body);
-  //     expect(sendMock).toBeCalledWith(JSON.stringify(body));
-  //   });
-  // });
 
   describe('sendError', () => {
     let api: Api;
