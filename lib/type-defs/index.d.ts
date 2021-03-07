@@ -85,4 +85,8 @@ export interface RouteMeta {
     name: string;
     description: string;
 }
+export interface ApiOptions {
+    custom404?: boolean;
+    basePath?: string;
+}
 //# sourceMappingURL=index.d.ts.map
