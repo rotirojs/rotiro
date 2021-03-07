@@ -38,7 +38,7 @@ export class Api {
     return this._locked;
   }
 
-  public static create(options: ApiOptions={}): Api {
+  public static create(options: ApiOptions = {}): Api {
     return new Api(options);
   }
 
@@ -74,7 +74,8 @@ export class Api {
   private _locked: boolean = false;
 
   private constructor(readonly options: ApiOptions) {
-    this.basePath = cleanBasePath(options.basePath || '');
+
+    this.basePath = cleanBasePath(this.options.basePath || '');
 
     this._authenticators = new Authenticators();
     this._endpoints = new Endpoints();
