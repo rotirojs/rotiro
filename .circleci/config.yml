@@ -19,6 +19,6 @@ jobs:
             - node_modules
       - run:
           command:
-            yarn install &&  test:ci
+            yarn install && yarn test:ci
       - codecov/upload:
           file: './coverage/clover.xml'
