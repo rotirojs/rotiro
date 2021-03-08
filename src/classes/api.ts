@@ -14,6 +14,23 @@ import { Mappers } from './mappers';
 import { Routes } from './routes';
 
 export class Api {
+  private readonly _routes: Routes;
+  private readonly _authenticators: Authenticators;
+  private readonly _endpoints: Endpoints;
+  private readonly _controllers: Controllers;
+  private readonly _mappers: Mappers;
+  private readonly basePath: string;
+
+  private constructor(readonly options: ApiOptions) {
+    this.basePath = cleanBasePath(this.options.basePath || '');
+
+    this._authenticators = new Authenticators();
+    this._endpoints = new Endpoints();
+    this._controllers = new Controllers();
+    this._mappers = new Mappers();
+    this._routes = new Routes(this.endpoints, this.controllers);
+  }
+
   public get controllers(): Controllers {
     return this._controllers;
   }
@@ -34,6 +51,8 @@ export class Api {
     return this._authenticators;
   }
 
+  private _locked: boolean = false;
+
   public get locked(): boolean {
     return this._locked;
   }
@@ -53,35 +72,20 @@ export class Api {
 
     let fullPath = cleanBasePath(request.originalUrl);
 
-    if (basePath.length) {
-      // remove the base path from the original url
+    // remove the base path from the original url
+    if (basePath.length <= fullPath.length) {
       fullPath = fullPath.substr(basePath.length);
     }
+    if (fullPath.length === 0) {
+      fullPath = '/';
+    }
+
     const method: RestMethods = request.method.toUpperCase() as RestMethods;
     const body: object = ['PUT', 'PATCH', 'POST'].includes(method)
       ? request.body
       : {};
 
     return { fullPath, method, body };
-  }
-  private readonly _routes: Routes;
-  private readonly _authenticators: Authenticators;
-  private readonly _endpoints: Endpoints;
-  private readonly _controllers: Controllers;
-  private readonly _mappers: Mappers;
-  private readonly basePath: string;
-
-  private _locked: boolean = false;
-
-  private constructor(readonly options: ApiOptions) {
-
-    this.basePath = cleanBasePath(this.options.basePath || '');
-
-    this._authenticators = new Authenticators();
-    this._endpoints = new Endpoints();
-    this._controllers = new Controllers();
-    this._mappers = new Mappers();
-    this._routes = new Routes(this.endpoints, this.controllers);
   }
 
   public build(): void {

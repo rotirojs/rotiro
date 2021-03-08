@@ -120,6 +120,17 @@ describe('classes/api', () => {
       }
     });
 
+    it('Should should handle a get request for a root path of /', async () => {
+      const func = jest.fn();
+      request.method = 'GET';
+      request.originalUrl = '/';
+      api.endpoints.add('home', '/', ['GET']);
+      api.controllers.add('home', 'GET', func);
+      api.build();
+      await middleware(request, response, undefined);
+      expect(func).toBeCalled();
+    });
+
     it('Should should handle a get request', async () => {
       const func = jest.fn();
       request.method = 'GET';
