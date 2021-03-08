@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  codecov: codecov/codecov@1.0.2
 jobs:
   build:
     docker:
@@ -18,3 +20,5 @@ jobs:
       - run:
           command:
             yarn test:ci
+      - codecov/upload:
+          file: './coverage/clover.xml'
