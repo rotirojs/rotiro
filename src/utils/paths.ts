@@ -4,10 +4,10 @@ import { trimString } from './text';
 export function cleanBasePath(path: string): string {
   path = trimString(path);
   if (path.length === 0) {
-    return '';
+    return '/';
   }
   if (path.length === 1 && path === '/') {
-    return '';
+    return '/';
   }
 
   if (path.endsWith('/')) {

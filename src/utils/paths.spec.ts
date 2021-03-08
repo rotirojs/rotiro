@@ -37,14 +37,6 @@ describe('utils/paths', () => {
       expect(routePath).toEqual('/ping');
     });
 
-    // it('Removes path params', () => {
-    //   const path: string = '/ping/:text?test=case'
-    //   const routePath = sanitisePath(path)
-    //   expect(routePath).toEqual('/ping/:')
-    //
-    //   expect(sanitisePath('/ping/:test/:case').routePath).toEqual('/ping/:/:')
-    //   expect(sanitisePath('/ping/:test/:case/end').routePath).toEqual('/ping/:/:/end')
-    // })
   });
 
   describe('splitFullPath', () => {
@@ -96,13 +88,7 @@ describe('utils/paths', () => {
         query: 'param1=bob&param2=frank'
       });
     });
-    // it ('',()=>{
-    //   expect(splitFullPath()).toEqual()
-    // })
-    //
-    // it ('',()=>{
-    //   expect(splitFullPath()).toEqual()
-    // })
+
   });
 
   describe('getQueryAsObject', () => {
@@ -139,16 +125,16 @@ describe('utils/paths', () => {
   });
 
   describe('cleanBasePath', () => {
-    it('Should return an empty string if single slash', () => {
-      expect(cleanBasePath('/')).toEqual('');
+    it('Should return / if single slash', () => {
+      expect(cleanBasePath('/')).toEqual('/');
     });
 
-    it('Should return an empty string if string empty', () => {
-      expect(cleanBasePath('  ')).toEqual('');
+    it('Should return / if string empty', () => {
+      expect(cleanBasePath('  ')).toEqual('/');
     });
 
-    it('Should return an empty string if only contains single slash', () => {
-      expect(cleanBasePath('  /  ')).toEqual('');
+    it('Should return / if only contains single slash', () => {
+      expect(cleanBasePath('  /  ')).toEqual('/');
     });
 
     it('Should remove a trailing slash slash', () => {
