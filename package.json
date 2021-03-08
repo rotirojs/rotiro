@@ -5,6 +5,7 @@
   "author": "Alex Everitt",
   "scripts": {
     "test": "jest",
+    "test:ci": "jest --ci --coverage && codecov",
     "clear-build": "rm -rf lib/*",
     "build": "rm -rf lib/* && tsc",
     "prepublishOnly": "rm -rf lib/* && tsc && cp package.json lib/",
