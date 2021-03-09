@@ -10,8 +10,8 @@ export interface ApiRequest {
   authenticated: boolean; // Is the request authenticated or not
   auth?: any; // auth details - probably going to be generic e.g. include user stuff
   pathParams: Record<string, ApiRequestParam>;
-  bodyParams: Record<string, ApiRequestParam>;
-  queryParams: Record<string, ApiRequestParam>;
+  body: Record<string, ApiRequestParam>;
+  query: Record<string, ApiRequestParam>;
   rawBody: any; // raw body - assume json for now
   rawQuery: string; // query string after ? e.g. test=case&some=other
   request?: any; // express request

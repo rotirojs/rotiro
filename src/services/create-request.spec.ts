@@ -17,7 +17,7 @@ describe('services/create-request', () => {
         GETResponse = {
           authenticated: false,
           rawBody: undefined,
-          bodyParams: {},
+          body: {},
           method: 'GET',
           path: '/users/234',
           pathParams: {
@@ -25,7 +25,7 @@ describe('services/create-request', () => {
           },
           pathPattern: /^\/users(?:\/([^\/#\?]+?))[\/#\?]?$/i,
           rawQuery: '',
-          queryParams: {},
+          query: {},
           request: null,
           routeName: 'user',
           valid: false,
@@ -69,7 +69,7 @@ describe('services/create-request', () => {
         );
         const path = '/users/234?version=4332';
         GETResponse.rawQuery = 'version=4332';
-        GETResponse.queryParams = {
+        GETResponse.query = {
           version: {
             name: 'version',
             type: 'number',
@@ -107,7 +107,7 @@ describe('services/create-request', () => {
         POSTResponse = {
           authenticated: false,
           rawBody: { count: 43, name: 'Jim' },
-          bodyParams: {
+          body: {
             count: {
               name: 'count',
               type: 'number',
@@ -128,7 +128,7 @@ describe('services/create-request', () => {
           },
           pathPattern: /^\/users(?:\/([^\/#\?]+?))[\/#\?]?$/i,
           rawQuery: '',
-          queryParams: {},
+          query: {},
           request: null,
           routeName: 'user',
           valid: false,
@@ -183,10 +183,10 @@ describe('services/create-request', () => {
         const path = '/users/234';
         const result = createRequest(path, METHOD, endPoints, mappers);
         POSTResponse.rawBody = undefined;
-        POSTResponse.bodyParams.name.valid = false;
-        POSTResponse.bodyParams.name.value = undefined;
-        POSTResponse.bodyParams.count.valid = false;
-        POSTResponse.bodyParams.count.value = undefined;
+        POSTResponse.body.name.valid = false;
+        POSTResponse.body.name.value = undefined;
+        POSTResponse.body.count.valid = false;
+        POSTResponse.body.count.value = undefined;
         expect(result).toEqual(POSTResponse);
       });
     });

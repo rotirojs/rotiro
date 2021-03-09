@@ -9,8 +9,8 @@ export interface ApiRequest {
     authenticated: boolean;
     auth?: any;
     pathParams: Record<string, ApiRequestParam>;
-    bodyParams: Record<string, ApiRequestParam>;
-    queryParams: Record<string, ApiRequestParam>;
+    body: Record<string, ApiRequestParam>;
+    query: Record<string, ApiRequestParam>;
     rawBody: any;
     rawQuery: string;
     request?: any;
