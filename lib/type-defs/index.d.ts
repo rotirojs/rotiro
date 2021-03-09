@@ -3,12 +3,12 @@ export interface ApiRequest {
     routeName: string;
     pathPattern: string;
     authTokenName?: string;
-    path: string;
+    pathName: string;
     method: RestMethods;
     valid: boolean;
     authenticated: boolean;
     auth?: any;
-    pathParams: Record<string, ApiRequestParam>;
+    path: Record<string, ApiRequestParam>;
     body: Record<string, ApiRequestParam>;
     query: Record<string, ApiRequestParam>;
     rawBody: any;
