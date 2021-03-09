@@ -39,7 +39,7 @@ describe('classes/routes', () => {
     //   /* do nothing */
     // };
     beforeEach(() => {
-      api = Api.create();
+      api = new Api();
     });
 
     it('should add a route using a config', () => {
