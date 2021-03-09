@@ -13,7 +13,7 @@ describe('classes/api', () => {
   describe('create', () => {
     let api: Api;
     beforeEach(() => {
-      api = Api.create();
+      api = new Api();
     });
 
     it('Should create a new API instance', () => {
@@ -24,7 +24,7 @@ describe('classes/api', () => {
     });
 
     it('Should create a new API instance with options', () => {
-      api = Api.create({ basePath: '/', custom404: true });
+      api = new Api({ basePath: '/', custom404: true });
       expect(api.controllers).toBeInstanceOf(Controllers);
       expect(api.endpoints).toBeInstanceOf(Endpoints);
       expect(api.mappers).toBeInstanceOf(Mappers);
@@ -39,7 +39,7 @@ describe('classes/api', () => {
   describe('build', () => {
     let api: Api;
     beforeEach(() => {
-      api = Api.create();
+      api = new Api();
     });
 
     it('should lock items on build', () => {
@@ -76,7 +76,7 @@ describe('classes/api', () => {
     beforeEach(() => {
       request = jest.fn();
       response = jest.fn();
-      api = Api.create();
+      api = new Api();
       middleware = api.router();
     });
 
@@ -175,7 +175,7 @@ describe('classes/api', () => {
     });
 
     it('Should should error if customError and path not found', async () => {
-      api = Api.create({ custom404: true });
+      api = new Api({ custom404: true });
       middleware = api.router();
       const next = jest.fn();
       request.method = 'GET';
@@ -203,7 +203,7 @@ describe('classes/api', () => {
       request.originalUrl = '/ping';
       request.method = 'GET';
       response = jest.fn();
-      api = Api.create();
+      api = new Api();
       middleware = api.router();
       const authFunc: AuthenticatorFunc = async apiRequest => {
         return apiRequest.routeName === 'ping';
@@ -255,14 +255,14 @@ describe('classes/api', () => {
     beforeEach(() => {
       request = jest.fn();
       response = jest.fn();
-      api = Api.create();
+      api = new Api();
       middleware = api.router();
     });
 
     it('should process a route with a base path', async () => {
       const func = jest.fn();
       const options: ApiOptions = { basePath: 'api' };
-      api = Api.create(options);
+      api = new Api(options);
       api.endpoints.add('ping', '/ping', ['GET']);
       api.controllers.add('ping', 'GET', func);
       api.build();
@@ -276,8 +276,8 @@ describe('classes/api', () => {
 
     it('should fail a route without a base path', async () => {
       const func = jest.fn();
-      const options: ApiOptions = { basePath: 'api', custom404: true };
-      api = Api.create(options);
+      const options: ApiOptions = { basePath: 'api-base-path', custom404: true };
+      api = new Api(options);
       api.endpoints.add('ping', '/ping', ['GET']);
       api.controllers.add('ping', 'GET', func);
       api.build();
@@ -301,7 +301,7 @@ describe('classes/api', () => {
     beforeEach(() => {
       request = jest.fn();
       response = jest.fn();
-      api = Api.create();
+      api = new Api();
       middleware = api.router();
     });
 

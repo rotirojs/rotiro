@@ -1,10 +1,10 @@
 # Rotiro
 
-<p align="center">
-  <a href="https://circleci.com/gh/rotirojs/rotiro/tree/master"><img src="https://img.shields.io/circleci/build/gh/rotirojs/rotiro" alt="Build Status"></a>
-  <a href="https://www.npmjs.com/package/rotiro"><img src="https://img.shields.io/npm/v/rotiro.svg?sanitize=true" alt="License"></a>
-  <a href="https://codecov.io/github/rotirojs/rotiro?branch=master"><img src="https://img.shields.io/codecov/c/gh/rotirojs/rotiro.svg?sanitize=true" alt="Coverage Status"></a>
-</p>
+
+<a href="https://circleci.com/gh/rotirojs/rotiro/tree/master"><img src="https://img.shields.io/circleci/build/gh/rotirojs/rotiro" alt="Build Status"></a>
+<a href="https://www.npmjs.com/package/rotiro"><img src="https://img.shields.io/npm/v/rotiro.svg?sanitize=true" alt="License"></a>
+<a href="https://codecov.io/github/rotirojs/rotiro?branch=master"><img src="https://img.shields.io/codecov/c/gh/rotirojs/rotiro.svg?sanitize=true" alt="Coverage Status"></a>
+
 An Api schema middleware for Express written in typescript
 
 ## Getting started
