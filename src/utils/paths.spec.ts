@@ -36,7 +36,6 @@ describe('utils/paths', () => {
       const routePath = sanitisePath(path);
       expect(routePath).toEqual('/ping');
     });
-
   });
 
   describe('splitFullPath', () => {
@@ -88,7 +87,6 @@ describe('utils/paths', () => {
         query: 'param1=bob&param2=frank'
       });
     });
-
   });
 
   describe('getQueryAsObject', () => {

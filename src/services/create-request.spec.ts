@@ -16,16 +16,16 @@ describe('services/create-request', () => {
         mappers = new Mappers();
         GETResponse = {
           authenticated: false,
-          body: undefined,
-          bodyParams: {},
+          rawBody: undefined,
+          body: {},
           method: 'GET',
-          path: '/users/234',
-          pathParams: {
+          pathName: '/users/234',
+          path: {
             id: { name: 'id', type: 'number', valid: true, value: 234 }
           },
           pathPattern: /^\/users(?:\/([^\/#\?]+?))[\/#\?]?$/i,
-          query: '',
-          queryParams: {},
+          rawQuery: '',
+          query: {},
           request: null,
           routeName: 'user',
           valid: false,
@@ -42,8 +42,8 @@ describe('services/create-request', () => {
           [],
           [{ name: 'id', type: 'number' }]
         );
-        const path = '/users/234';
-        const result = createRequest(path, METHOD, endPoints, mappers);
+        const pathName = '/users/234';
+        const result = createRequest(pathName, METHOD, endPoints, mappers);
         expect(result).toEqual(GETResponse);
       });
 
@@ -54,8 +54,8 @@ describe('services/create-request', () => {
           [],
           [{ name: 'id', type: 'number' }]
         );
-        const path = '/users/234';
-        const result = createRequest(path, 'DELETE', endPoints, mappers);
+        const pathName = '/users/234';
+        const result = createRequest(pathName, 'DELETE', endPoints, mappers);
         GETResponse.method = 'DELETE';
         expect(result).toEqual(GETResponse);
       });
@@ -67,9 +67,9 @@ describe('services/create-request', () => {
           { GET: { queryParams: [{ name: 'version', type: 'number' }] } },
           [{ name: 'id', type: 'number' }]
         );
-        const path = '/users/234?version=4332';
-        GETResponse.query = 'version=4332';
-        GETResponse.queryParams = {
+        const pathName = '/users/234?version=4332';
+        GETResponse.rawQuery = 'version=4332';
+        GETResponse.query = {
           version: {
             name: 'version',
             type: 'number',
@@ -77,7 +77,7 @@ describe('services/create-request', () => {
             value: 4332
           }
         };
-        const result = createRequest(path, METHOD, endPoints, mappers);
+        const result = createRequest(pathName, METHOD, endPoints, mappers);
         expect(result).toEqual(GETResponse);
       });
     });
@@ -106,8 +106,8 @@ describe('services/create-request', () => {
         };
         POSTResponse = {
           authenticated: false,
-          body: { count: 43, name: 'Jim' },
-          bodyParams: {
+          rawBody: { count: 43, name: 'Jim' },
+          body: {
             count: {
               name: 'count',
               type: 'number',
@@ -122,13 +122,13 @@ describe('services/create-request', () => {
             }
           },
           method: 'POST',
-          path: '/users/234',
-          pathParams: {
+          pathName: '/users/234',
+          path: {
             id: { name: 'id', type: 'number', valid: true, value: 234 }
           },
           pathPattern: /^\/users(?:\/([^\/#\?]+?))[\/#\?]?$/i,
-          query: '',
-          queryParams: {},
+          rawQuery: '',
+          query: {},
           request: null,
           routeName: 'user',
           valid: false,
@@ -142,25 +142,11 @@ describe('services/create-request', () => {
         endPoints.add('user', '/users/:id', methodConfig, [
           { name: 'id', type: 'number' }
         ]);
-        const path = '/users/234';
+        const pathName = '/users/234';
         const body: any = { name: 'Jim', count: 43 };
-        const result = createRequest(path, METHOD, endPoints, mappers, body);
+        const result = createRequest(pathName, METHOD, endPoints, mappers, body);
         expect(result).toEqual(POSTResponse);
       });
-
-      // it('Should fail if no body received when body contains required parameters',()=>{
-      //   endPoints.add('user', '/users/:id', methodConfig, [
-      //     { name: 'id', type: 'number' }
-      //   ]);
-      //   const path = '/users/234';
-      //   const result = createRequest(path, METHOD, endPoints, mappers);
-      //   POSTResponse.body=undefined
-      //   POSTResponse.bodyParams.name.valid=false
-      //   POSTResponse.bodyParams.name.value=undefined
-      //   POSTResponse.bodyParams.count.valid=false
-      //   POSTResponse.bodyParams.count.value=undefined
-      //   expect(result).toEqual(POSTResponse);
-      // })
 
       it('Should create a request from a PATCH', () => {
         methodConfig = {
@@ -169,9 +155,9 @@ describe('services/create-request', () => {
         endPoints.add('user', '/users/:id', methodConfig, [
           { name: 'id', type: 'number' }
         ]);
-        const path = '/users/234';
+        const pathName = '/users/234';
         const body: any = { name: 'Jim', count: 43 };
-        const result = createRequest(path, 'PATCH', endPoints, mappers, body);
+        const result = createRequest(pathName, 'PATCH', endPoints, mappers, body);
         POSTResponse.method = 'PATCH';
         expect(result).toEqual(POSTResponse);
       });
@@ -183,9 +169,9 @@ describe('services/create-request', () => {
         endPoints.add('user', '/users/:id', methodConfig, [
           { name: 'id', type: 'number' }
         ]);
-        const path = '/users/234';
+        const pathName = '/users/234';
         const body: any = { name: 'Jim', count: 43 };
-        const result = createRequest(path, 'PUT', endPoints, mappers, body);
+        const result = createRequest(pathName, 'PUT', endPoints, mappers, body);
         POSTResponse.method = 'PUT';
         expect(result).toEqual(POSTResponse);
       });
@@ -194,13 +180,13 @@ describe('services/create-request', () => {
         endPoints.add('user', '/users/:id', methodConfig, [
           { name: 'id', type: 'number' }
         ]);
-        const path = '/users/234';
-        const result = createRequest(path, METHOD, endPoints, mappers);
-        POSTResponse.body = undefined;
-        POSTResponse.bodyParams.name.valid = false;
-        POSTResponse.bodyParams.name.value = undefined;
-        POSTResponse.bodyParams.count.valid = false;
-        POSTResponse.bodyParams.count.value = undefined;
+        const pathName = '/users/234';
+        const result = createRequest(pathName, METHOD, endPoints, mappers);
+        POSTResponse.rawBody = undefined;
+        POSTResponse.body.name.valid = false;
+        POSTResponse.body.name.value = undefined;
+        POSTResponse.body.count.valid = false;
+        POSTResponse.body.count.value = undefined;
         expect(result).toEqual(POSTResponse);
       });
     });

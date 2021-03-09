@@ -108,7 +108,7 @@ describe('classes/endpoints', () => {
 
     it('should add a root endpoint with path /', () => {
       const result = endpoints.add('home', '/', ['GET']);
-      expect(result).toBeTruthy()
+      expect(result).toBeTruthy();
     });
 
     it('should accept config against methods', () => {

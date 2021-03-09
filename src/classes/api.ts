@@ -14,7 +14,6 @@ import { Mappers } from './mappers';
 import { Routes } from './routes';
 
 export class Api {
-
   public get controllers(): Controllers {
     return this._controllers;
   }
@@ -184,7 +183,6 @@ export class Api {
 
       try {
         // test auth
-
         func.call(self, apiRequest);
       } catch (ex) {
         // look for a particular error structure and return

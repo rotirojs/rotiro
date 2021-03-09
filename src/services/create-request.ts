@@ -21,35 +21,35 @@ export function createRequest(
   method: RestMethods,
   endpoints: Endpoints,
   mappers: Mappers,
-  body?: object
+  rawBody?: object
 ): ApiRequest {
-  const { path, query } = splitFullPath(fullPath);
+  const { path: pathName, query: rawQuery } = splitFullPath(fullPath);
 
   const routePatterns: RouteNamePattern[] = endpoints.getRoutePatterns();
-  const routeName: string = getRouteName(path, routePatterns);
+  const routeName: string = getRouteName(pathName, routePatterns);
   const endpoint: ApiEndpointSchema = endpoints.get(routeName);
   const methodSchema: MethodSchema = endpoint.methods[method] || {};
-  const bodyParams = methodSchema.bodyParams
-    ? getBodyParams(body, methodSchema.bodyParams, mappers)
+  const body = methodSchema.bodyParams
+    ? getBodyParams(rawBody, methodSchema.bodyParams, mappers)
     : {};
-  const queryParams = methodSchema.queryParams
-    ? getQueryParams(query, methodSchema.queryParams, mappers)
+  const query = methodSchema.queryParams
+    ? getQueryParams(rawQuery, methodSchema.queryParams, mappers)
     : {};
-  const pathParams = getPathParams(path, endpoint, mappers);
+  const pathParams = getPathParams(pathName, endpoint, mappers);
 
   return {
     routeName,
     pathPattern: endpoint.pattern,
-    path,
+    pathName,
     authTokenName: methodSchema.auth,
     method,
     valid: false,
     authenticated: false,
-    pathParams,
-    bodyParams,
-    queryParams,
+    path: pathParams,
     body,
     query,
+    rawBody,
+    rawQuery,
     request: null,
     sendResponse
   };

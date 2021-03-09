@@ -156,7 +156,7 @@ describe('classes/api', () => {
       api.build();
       middleware(request, response, undefined);
       const calledWith: any = func.mock.calls[0][0];
-      expect(calledWith.pathParams.id.value).toEqual('bob');
+      expect(calledWith.path.id.value).toEqual('bob');
     });
 
     it('Should should return 404 response if path not found', async () => {
@@ -276,7 +276,10 @@ describe('classes/api', () => {
 
     it('should fail a route without a base path', async () => {
       const func = jest.fn();
-      const options: ApiOptions = { basePath: 'api-base-path', custom404: true };
+      const options: ApiOptions = {
+        basePath: 'api-base-path',
+        custom404: true
+      };
       api = new Api(options);
       api.endpoints.add('ping', '/ping', ['GET']);
       api.controllers.add('ping', 'GET', func);

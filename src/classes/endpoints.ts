@@ -10,7 +10,6 @@ import { sanitisePath, trimString } from '../utils';
 import { areListsEqual } from '../utils/arrays';
 
 export class Endpoints {
-
   public get locked(): boolean {
     return this._locked;
   }
