@@ -16,7 +16,7 @@ describe('services/create-request', () => {
         mappers = new Mappers();
         GETResponse = {
           authenticated: false,
-          body: undefined,
+          rawBody: undefined,
           bodyParams: {},
           method: 'GET',
           path: '/users/234',
@@ -24,7 +24,7 @@ describe('services/create-request', () => {
             id: { name: 'id', type: 'number', valid: true, value: 234 }
           },
           pathPattern: /^\/users(?:\/([^\/#\?]+?))[\/#\?]?$/i,
-          query: '',
+          rawQuery: '',
           queryParams: {},
           request: null,
           routeName: 'user',
@@ -68,7 +68,7 @@ describe('services/create-request', () => {
           [{ name: 'id', type: 'number' }]
         );
         const path = '/users/234?version=4332';
-        GETResponse.query = 'version=4332';
+        GETResponse.rawQuery = 'version=4332';
         GETResponse.queryParams = {
           version: {
             name: 'version',
@@ -106,7 +106,7 @@ describe('services/create-request', () => {
         };
         POSTResponse = {
           authenticated: false,
-          body: { count: 43, name: 'Jim' },
+          rawBody: { count: 43, name: 'Jim' },
           bodyParams: {
             count: {
               name: 'count',
@@ -127,7 +127,7 @@ describe('services/create-request', () => {
             id: { name: 'id', type: 'number', valid: true, value: 234 }
           },
           pathPattern: /^\/users(?:\/([^\/#\?]+?))[\/#\?]?$/i,
-          query: '',
+          rawQuery: '',
           queryParams: {},
           request: null,
           routeName: 'user',
@@ -147,20 +147,6 @@ describe('services/create-request', () => {
         const result = createRequest(path, METHOD, endPoints, mappers, body);
         expect(result).toEqual(POSTResponse);
       });
-
-      // it('Should fail if no body received when body contains required parameters',()=>{
-      //   endPoints.add('user', '/users/:id', methodConfig, [
-      //     { name: 'id', type: 'number' }
-      //   ]);
-      //   const path = '/users/234';
-      //   const result = createRequest(path, METHOD, endPoints, mappers);
-      //   POSTResponse.body=undefined
-      //   POSTResponse.bodyParams.name.valid=false
-      //   POSTResponse.bodyParams.name.value=undefined
-      //   POSTResponse.bodyParams.count.valid=false
-      //   POSTResponse.bodyParams.count.value=undefined
-      //   expect(result).toEqual(POSTResponse);
-      // })
 
       it('Should create a request from a PATCH', () => {
         methodConfig = {
@@ -196,7 +182,7 @@ describe('services/create-request', () => {
         ]);
         const path = '/users/234';
         const result = createRequest(path, METHOD, endPoints, mappers);
-        POSTResponse.body = undefined;
+        POSTResponse.rawBody = undefined;
         POSTResponse.bodyParams.name.valid = false;
         POSTResponse.bodyParams.name.value = undefined;
         POSTResponse.bodyParams.count.valid = false;

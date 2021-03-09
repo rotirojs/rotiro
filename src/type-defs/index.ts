@@ -12,8 +12,8 @@ export interface ApiRequest {
   pathParams: Record<string, ApiRequestParam>;
   bodyParams: Record<string, ApiRequestParam>;
   queryParams: Record<string, ApiRequestParam>;
-  body: any; // raw body - assume json for now
-  query: string; // query string after ? e.g. test=case&some=other
+  rawBody: any; // raw body - assume json for now
+  rawQuery: string; // query string after ? e.g. test=case&some=other
   request?: any; // express request
   response?: any;
   sendResponse: (

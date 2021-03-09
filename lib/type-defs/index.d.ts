@@ -11,8 +11,8 @@ export interface ApiRequest {
     pathParams: Record<string, ApiRequestParam>;
     bodyParams: Record<string, ApiRequestParam>;
     queryParams: Record<string, ApiRequestParam>;
-    body: any;
-    query: string;
+    rawBody: any;
+    rawQuery: string;
     request?: any;
     response?: any;
     sendResponse: (apiRequest: ApiRequest, body: any, status?: number, contentType?: string) => void;

@@ -276,7 +276,10 @@ describe('classes/api', () => {
 
     it('should fail a route without a base path', async () => {
       const func = jest.fn();
-      const options: ApiOptions = { basePath: 'api-base-path', custom404: true };
+      const options: ApiOptions = {
+        basePath: 'api-base-path',
+        custom404: true
+      };
       api = new Api(options);
       api.endpoints.add('ping', '/ping', ['GET']);
       api.controllers.add('ping', 'GET', func);

@@ -48,8 +48,8 @@ export function createRequest(
     pathParams,
     bodyParams,
     queryParams,
-    body,
-    query,
+    rawBody: body,
+    rawQuery: query,
     request: null,
     sendResponse
   };
