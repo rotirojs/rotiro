@@ -1,3 +1,5 @@
+import { RotiroError } from '../errors';
+import { createError, ErrorCodes } from '../errors/error-codes';
 import { ApiRequest, ControlerFunc } from '../type-defs';
 import { Controllers } from './controllers';
 
@@ -27,9 +29,17 @@ describe('classes/controllers', () => {
 
     it('Should lock controller and prevent routes being added', () => {
       controllers.lock();
-      expect(() => {
+
+      let error: RotiroError | undefined;
+      try {
         controllers.add('bob', 'GET', func);
-      }).toThrow('Api is locked and cannot be updated');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E105);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
   });
 
@@ -91,9 +101,16 @@ describe('classes/controllers', () => {
     });
 
     it('Should throw error if no controller', () => {
-      expect(() => controllers.get('bob', 'GET')).toThrow(
-        'Route not supported'
-      );
+      let error: RotiroError | undefined;
+      try {
+        controllers.get('bob', 'GET');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E107);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
   });
 });

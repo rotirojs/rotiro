@@ -1,3 +1,4 @@
+import { createError, ErrorCodes } from '../errors/error-codes';
 import { createRequest } from '../services/create-request';
 import {
   ApiOptions,
@@ -44,7 +45,7 @@ export class Api {
     basePath: string
   ): { method: RestMethods; body: any; fullPath: string } {
     if (!request.originalUrl || !request.method) {
-      throw new Error('Original request not valid');
+      throw createError(ErrorCodes.E103);
     }
 
     let fullPath = cleanBasePath(request.originalUrl);
@@ -96,10 +97,7 @@ export class Api {
     );
 
     if (controllerErrors.length) {
-      const errorMessage: string = `Not all endpoints have a controller (${controllerErrors.join(
-        ', '
-      )})`;
-      throw new Error(errorMessage);
+      throw createError(ErrorCodes.E117, controllerErrors);
     }
 
     const authTokens: string[] = this._endpoints.getAuthTokenNames();
@@ -109,10 +107,7 @@ export class Api {
         authTokens
       );
       if (authenticatorErrors.length) {
-        const errorMessage: string = `One or more auth tokens to not have a handler (${authenticatorErrors.join(
-          ', '
-        )})`;
-        throw new Error(errorMessage);
+        throw createError(ErrorCodes.E118, authenticatorErrors);
       }
     }
 
@@ -127,7 +122,7 @@ export class Api {
     const self = this;
     return async (request: any, response: any) => {
       if (!self.locked) {
-        throw new Error('Api not built');
+        throw createError(ErrorCodes.E102);
       }
 
       const {

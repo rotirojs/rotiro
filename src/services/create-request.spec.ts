@@ -144,7 +144,13 @@ describe('services/create-request', () => {
         ]);
         const pathName = '/users/234';
         const body: any = { name: 'Jim', count: 43 };
-        const result = createRequest(pathName, METHOD, endPoints, mappers, body);
+        const result = createRequest(
+          pathName,
+          METHOD,
+          endPoints,
+          mappers,
+          body
+        );
         expect(result).toEqual(POSTResponse);
       });
 
@@ -157,7 +163,13 @@ describe('services/create-request', () => {
         ]);
         const pathName = '/users/234';
         const body: any = { name: 'Jim', count: 43 };
-        const result = createRequest(pathName, 'PATCH', endPoints, mappers, body);
+        const result = createRequest(
+          pathName,
+          'PATCH',
+          endPoints,
+          mappers,
+          body
+        );
         POSTResponse.method = 'PATCH';
         expect(result).toEqual(POSTResponse);
       });

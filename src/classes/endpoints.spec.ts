@@ -1,3 +1,5 @@
+import { RotiroError } from '../errors';
+import { createError, ErrorCodes } from '../errors/error-codes';
 import { Endpoints } from './endpoints';
 
 describe('classes/endpoints', () => {
@@ -44,9 +46,16 @@ describe('classes/endpoints', () => {
     });
 
     it('Should throw error if name not found', () => {
-      expect(() => {
+      let error: RotiroError | undefined;
+      try {
         endpoints.get('ping');
-      }).toThrow('Path not found');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E101);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
 
     it('Should return an endpoint by name', () => {
@@ -70,40 +79,77 @@ describe('classes/endpoints', () => {
     });
 
     it('Error if no route name', () => {
-      expect(() => {
+      let error: RotiroError | undefined;
+      try {
         endpoints.add('', '/ping', ['GET']);
-      }).toThrow('Invalid route name');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E108);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
 
     it('Error if parameters do not match schema', () => {
-      expect(() => {
+      let error: RotiroError | undefined;
+      try {
         endpoints.add(
           'ping',
           '/ping/:id',
           ['GET'],
           [{ name: 'ids', type: 'string' }]
         );
-      }).toThrow('Path parameters do not match schema');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E110);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
 
     it('Error if route exists', () => {
       endpoints.add('Ping', '/ping', ['GET']);
-      expect(() => {
+
+      let error: RotiroError | undefined;
+      try {
         endpoints.add('Ping', '/ping', ['GET']);
-      }).toThrow('Route name already added');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E109);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
 
     it('Error if no path', () => {
-      expect(() => {
+      let error: RotiroError | undefined;
+      try {
         endpoints.add('Ping', '', ['GET']);
-      }).toThrow('Invalid path');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E111);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
 
     it('Error if path exists', () => {
       endpoints.add('Ping', '/ping', ['GET']);
-      expect(() => {
+
+      let error: RotiroError | undefined;
+      try {
         endpoints.add('Ping2', '/ping', ['GET']);
-      }).toThrow('Path already added');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E112);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
 
     it('should add a root endpoint with path /', () => {
@@ -141,9 +187,17 @@ describe('classes/endpoints', () => {
 
     it('Should lock endpoint and prevent routes being added', () => {
       endpoints.lock();
-      expect(() => {
+
+      let error: RotiroError | undefined;
+      try {
         endpoints.add('bob', '/bob', [], []);
-      }).toThrow('Api is locked and cannot be updated');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E105);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
   });
 

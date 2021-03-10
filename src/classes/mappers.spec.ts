@@ -1,3 +1,5 @@
+import { RotiroError } from '../errors';
+import { createError, ErrorCodes } from '../errors/error-codes';
 import { DataMapperFunc } from '../type-defs';
 import { stringMapper } from '../utils/mappers';
 import { Mappers } from './mappers';
@@ -21,10 +23,18 @@ describe('classes/mappers', () => {
 
     it('Should lock the class and throw error if changed', () => {
       mappers.lock();
-      expect(() => {
+
+      let error: RotiroError | undefined;
+      try {
         const func: any = undefined;
         mappers.registerMapper('string', func);
-      }).toThrow('Api is locked and cannot be updated');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E105);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
   });
 

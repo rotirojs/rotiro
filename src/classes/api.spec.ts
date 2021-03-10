@@ -1,3 +1,5 @@
+import { RotiroError } from '../errors';
+import { createError, ErrorCodes } from '../errors/error-codes';
 import { ApiOptions, AuthenticatorFunc } from '../type-defs';
 import { Api } from './api';
 import { Controllers } from './controllers';
@@ -52,19 +54,36 @@ describe('classes/api', () => {
 
     it('Should throw an error if endpoint validation fails', () => {
       api.endpoints.add('bob', '/bob', ['GET']);
-      expect(() => {
+      let error: RotiroError | undefined;
+      try {
         api.build();
-      }).toThrow('Not all endpoints have a controller (bob:GET)');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E117, ['bob:GET']);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
+      expect((error as RotiroError).content).toEqual(expectedError.content);
     });
 
     it('Should throw error if endpoint auth not match a handler', () => {
       api.controllers.add('bob', 'GET', jest.fn());
       api.endpoints.add('bob', '/bob', { GET: { auth: 'authToken' } });
-      expect(() => {
+
+      let error: RotiroError | undefined;
+      try {
         api.build();
-      }).toThrow(
-        'One or more auth tokens to not have a handler (authToken has no handler registered)'
-      );
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E118, [
+        'authToken has no handler registered'
+      ]);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
+      expect((error as RotiroError).content).toEqual(expectedError.content);
     });
   });
 
@@ -87,8 +106,6 @@ describe('classes/api', () => {
       } catch (ex) {
         expect(ex).toEqual(error);
       }
-
-      // }).rejects().toEqual('Api not built');
     });
 
     it('Should throw an error if request is missing originalUrl', async () => {

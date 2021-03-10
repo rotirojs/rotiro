@@ -1,3 +1,4 @@
+import { createError, ErrorCodes } from '../errors/error-codes';
 import { ControlerFunc, RestMethods } from '../type-defs';
 
 export class Controllers {
@@ -22,7 +23,7 @@ export class Controllers {
     controller: ControlerFunc
   ) {
     if (this._locked) {
-      throw new Error('Api is locked and cannot be updated');
+      throw createError(ErrorCodes.E105);
     }
 
     if (!this.controllers[routeName]) {
@@ -59,7 +60,6 @@ export class Controllers {
     if (controllers) {
       return controllers[method];
     }
-
-    throw new Error('Route not supported');
+    throw createError(ErrorCodes.E107);
   }
 }

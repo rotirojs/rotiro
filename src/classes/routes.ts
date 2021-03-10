@@ -1,3 +1,4 @@
+import { createError, ErrorCodes } from '../errors/error-codes';
 import {
   MethodSchema,
   PathSchemaParam,
@@ -27,7 +28,7 @@ export class Routes {
 
   public add(name: string, path: string, config: RouteConfig) {
     if (this.locked) {
-      throw new Error('Api is locked and cannot be updated');
+      throw createError(ErrorCodes.E105);
     }
 
     const pathParams: PathSchemaParam[] = [];
@@ -49,7 +50,7 @@ export class Routes {
 
     const supportedMethods = Object.keys(config.methods);
     if (!supportedMethods.length) {
-      throw new Error('No methods defined');
+      throw createError(ErrorCodes.E113);
     }
 
     for (const method of supportedMethods) {

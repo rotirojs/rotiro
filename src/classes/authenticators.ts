@@ -1,3 +1,4 @@
+import { createError, ErrorCodes } from '../errors/error-codes';
 import { AuthenticatorFunc } from '../type-defs';
 
 export class Authenticators {
@@ -15,7 +16,7 @@ export class Authenticators {
 
   public add(authTokenName: string, authenticator: AuthenticatorFunc) {
     if (this._locked) {
-      throw new Error('Api is locked and cannot be updated');
+      throw createError(ErrorCodes.E105);
     }
 
     this.authenticators[authTokenName] = authenticator;
@@ -38,7 +39,6 @@ export class Authenticators {
     if (authenticator) {
       return authenticator;
     }
-
-    throw new Error('Auth token not supported');
+    throw createError(ErrorCodes.E106);
   }
 }

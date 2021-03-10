@@ -1,5 +1,7 @@
 import { Endpoints } from '../../classes';
 import { Mappers } from '../../classes/mappers';
+import { RotiroError } from '../../errors';
+import { createError, ErrorCodes } from '../../errors/error-codes';
 import { ApiEndpointSchema } from '../../type-defs';
 import { getPathParams } from './path-params';
 
@@ -87,9 +89,16 @@ describe('utils/request-params/path-params', () => {
         [{ name: 'id', type: 'number' }]
       );
 
-      expect(() => {
+      let error: RotiroError | undefined;
+      try {
         getPathParams(path, endpoint, mappers);
-      }).toThrow('Invalid parameters');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E116);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
 
     it('should return empty object if no params', () => {

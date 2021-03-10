@@ -1,3 +1,5 @@
+import { RotiroError } from '../errors';
+import { createError, ErrorCodes } from '../errors/error-codes';
 import { getAuthToken } from './auth-token';
 
 describe('utils/auth-token', () => {
@@ -17,17 +19,33 @@ describe('utils/auth-token', () => {
     it('Throw error if not token name', () => {
       const tokenName: string = '';
       const request: any = { headers: { Authorization: 'token' } };
-      expect(() => {
+
+      let error: RotiroError | undefined;
+      try {
         getAuthToken(request, tokenName);
-      }).toThrow('Invalid token name');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E115);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
 
     it('Throw error if no request', () => {
       const tokenName: string = 'Authorization';
       const request: any = undefined;
-      expect(() => {
+
+      let error: RotiroError | undefined;
+      try {
         getAuthToken(request, tokenName);
-      }).toThrow('Invalid request');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E114);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
 
     it('Return empty string if no headers', () => {

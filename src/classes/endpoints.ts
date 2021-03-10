@@ -1,4 +1,5 @@
 import { pathToRegexp } from 'path-to-regexp';
+import { createError, ErrorCodes } from '../errors/error-codes';
 import {
   ApiEndpointSchema,
   MethodSchema,
@@ -68,7 +69,7 @@ export class Endpoints {
 
   public get(name: string): ApiEndpointSchema {
     if (!this.endpoints[name]) {
-      throw new Error('Path not found');
+      throw createError(ErrorCodes.E101);
     }
     return this.endpoints[name];
   }
@@ -80,16 +81,16 @@ export class Endpoints {
     pathParams: PathSchemaParam[] = []
   ): ApiEndpointSchema {
     if (this.locked) {
-      throw new Error('Api is locked and cannot be updated');
+      throw createError(ErrorCodes.E105);
     }
 
     const routeName: string = trimString(name);
 
     if (!routeName.length) {
-      throw new Error('Invalid route name');
+      throw createError(ErrorCodes.E108);
     }
     if (this.endpoints[routeName]) {
-      throw new Error('Route name already added');
+      throw createError(ErrorCodes.E109);
     }
 
     const routePath = sanitisePath(path);
@@ -108,14 +109,14 @@ export class Endpoints {
         })
       )
     ) {
-      throw new Error('Path parameters do not match schema');
+      throw createError(ErrorCodes.E110);
     }
 
     if (!routePath.length) {
-      throw new Error('Invalid path');
+      throw createError(ErrorCodes.E111);
     }
     if (this.paths[routePath]) {
-      throw new Error('Path already added');
+      throw createError(ErrorCodes.E112);
     }
 
     let endpointMethods: Record<string, MethodSchema>;

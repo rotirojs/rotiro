@@ -1,3 +1,5 @@
+import { RotiroError } from '../errors';
+import { createError, ErrorCodes } from '../errors/error-codes';
 import { RouteConfig } from '../type-defs';
 import { Api } from './api';
 import { Controllers } from './controllers';
@@ -27,17 +29,22 @@ describe('classes/routes', () => {
 
     it('Should lock the class and throw error if changed', () => {
       routes.lock();
-      expect(() => {
+
+      let error: RotiroError | undefined;
+      try {
         routes.add('ping', '/ping', {} as any);
-      }).toThrow('Api is locked and cannot be updated');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E105);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
   });
 
   describe('add route', () => {
     let api: Api;
-    // const func: ControlerFunc = (req: ApiRequest) => {
-    //   /* do nothing */
-    // };
     beforeEach(() => {
       api = new Api();
     });
@@ -119,9 +126,16 @@ describe('classes/routes', () => {
         methods: {}
       };
 
-      expect(() => {
+      let error: RotiroError | undefined;
+      try {
         api.routes.add('ping', '/ping/:id', routeConfig);
-      }).toThrow('No methods defined');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E113);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
 
     it('will assign an auth parameter to a method', () => {

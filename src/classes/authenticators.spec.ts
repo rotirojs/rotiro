@@ -1,3 +1,5 @@
+import { RotiroError } from '../errors';
+import { createError, ErrorCodes } from '../errors/error-codes';
 import { ApiRequest, AuthenticatorFunc } from '../type-defs';
 import { Authenticators } from './authenticators';
 
@@ -25,9 +27,17 @@ describe('classes/authenticators', () => {
 
     it('Should lock authenticator and prevent routes being added', () => {
       authenticators.lock();
-      expect(() => {
+
+      let error: RotiroError | undefined;
+      try {
         authenticators.add('bob', func);
-      }).toThrow('Api is locked and cannot be updated');
+      } catch (ex) {
+        error = ex;
+      }
+
+      const expectedError = createError(ErrorCodes.E105);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
     });
   });
 
@@ -89,9 +99,13 @@ describe('classes/authenticators', () => {
     });
 
     it('Should throw error if no controller', () => {
-      expect(() => authenticators.get('bob')).toThrow(
-        'Auth token not supported'
-      );
+      let error: RotiroError | undefined;
+      try {
+        authenticators.get('bob');
+      } catch (ex) {
+        error = ex;
+      }
+      expect(error).toEqual(createError(ErrorCodes.E106));
     });
   });
 });
