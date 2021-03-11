@@ -13,6 +13,8 @@ import { Controllers } from './controllers';
 import { Endpoints } from './endpoints';
 import { Mappers } from './mappers';
 import { Routes } from './routes';
+import { RotiroErrorResponse } from '../errors';
+import { HttpErrors } from '../errors/http-error-codes';
 
 export class Api {
   public get controllers(): Controllers {
@@ -145,14 +147,8 @@ export class Api {
           body
         );
       } catch (ex) {
-        // check to see if the error should be handled automatically
-        if (!this.options.custom404 && ex.message === 'Path not found') {
-          // create a 404 response
-          response.status(404).send('Not Found');
-          return;
-        } else {
-          throw ex;
-        }
+        this.handleRouteError(ex, response);
+        return;
       }
 
       apiRequest.request = request;
@@ -191,5 +187,39 @@ export class Api {
     // This needs to manage more than just express in the future
     // add middleware hook to manage sending a response
     response.status(error.statusCode).send(error);
+  }
+
+  private handleRouteError(ex: any, response: any) {
+    switch (ex.name) {
+      case 'RotiroErrorResponse':
+        // status or 500
+        const responseError: RotiroErrorResponse = ex;
+
+        response
+          .status(responseError.status)
+          .send(
+            responseError.content ||
+              responseError.message ||
+              HttpErrors[responseError.status] ||
+              'Api Error'
+          );
+
+        return;
+      case 'RotiroError':
+        if (!this.options.custom404 && ex.errorCode === 'E101') {
+          // create a 404 response
+          response.status(404).send('Not Found');
+          return;
+        }
+        response.status(500).send('Internal Server Error');
+        return;
+    }
+    // if (!this.options.custom404 && ex.message === 'Path not found') {
+    //   // create a 404 response
+    //   response.status(404).send('Not Found');
+    //   return;
+    // } else {
+    //   throw ex;
+    // }
   }
 }
