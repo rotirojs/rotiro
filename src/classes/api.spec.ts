@@ -305,11 +305,24 @@ describe('classes/api', () => {
       request.originalUrl = '/ping';
       request.method = 'GET';
       const expressFunc = api.router();
+
+      let error: RotiroError | undefined;
       try {
         await expressFunc(request, response);
       } catch (ex) {
-        expect(ex).toEqual(new Error('Path not found'));
+        error = ex;
       }
+
+      const expectedError = createError(ErrorCodes.E101);
+      expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
+      expect((error as RotiroError).message).toEqual(expectedError.message);
+
+
+      // try {
+      //   await expressFunc(request, response);
+      // } catch (ex) {
+      //   expect(ex).toEqual(new Error('Path not found'));
+      // }
     });
   });
 

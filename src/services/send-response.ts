@@ -6,6 +6,8 @@ export function sendResponse(
   status: number = 200,
   contentType?: string
 ) {
+  console.log(this)
+
   if (body === null || typeof body === 'undefined') {
     body = '';
   }

@@ -17,7 +17,7 @@ export interface ApiRequest {
   request?: any; // express request
   response?: any;
   sendResponse: (
-    apiRequest: ApiRequest,
+    // apiRequest: ApiRequest,
     body: any,
     status?: number,
     contentType?: string
@@ -41,6 +41,8 @@ export interface RouteNamePattern {
   routeName: string;
   pattern: any;
 }
+
+export type SendResponse=(status: number, body: any, contentType: string) => void;
 
 export type ControlerFunc = (apiRequest: ApiRequest) => void;
 
@@ -111,4 +113,17 @@ export interface RouteMeta {
 export interface ApiOptions {
   custom404?: boolean;
   basePath?: string;
+}
+
+export interface RotiroMiddleware {
+  // extractRequestDetail: () => RequestDetail;
+  sendResponse: SendResponse;
+  requestDetail: RequestDetail
+}
+
+export interface RequestDetail {
+  method: string;
+  url: string;
+  body?: object;
+  headers: Record<string, string>;
 }

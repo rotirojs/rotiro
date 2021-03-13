@@ -37,6 +37,14 @@ export function createRequest(
     : {};
   const pathParams = getPathParams(pathName, endpoint, mappers);
 
+  const sendResponseProxy = (
+    body: any,
+    status: number = 200,
+    contentType?: string
+  ) => {
+    sendResponse(this, body, status, contentType);
+  };
+
   return {
     routeName,
     pathPattern: endpoint.pattern,
@@ -51,6 +59,6 @@ export function createRequest(
     rawBody,
     rawQuery,
     request: null,
-    sendResponse
+    sendResponse: sendResponseProxy
   };
 }

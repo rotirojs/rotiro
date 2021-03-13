@@ -1,9 +1,15 @@
 import { Endpoints } from '../classes';
 import { Mappers } from '../classes/mappers';
-import { MethodSchema, RestMethods } from '../type-defs';
+import {ApiRequest, MethodSchema, RestMethods} from '../type-defs';
 import { createRequest } from './create-request';
 import { sendResponse } from './send-response';
-
+const sendResponseProxy = (
+  body: any,
+  status: number = 200,
+  contentType?: string
+) => {
+  sendResponse(undefined as any, body, status, contentType);
+};
 describe('services/create-request', () => {
   describe('createRequest', () => {
     describe('GET requests', () => {
@@ -29,7 +35,7 @@ describe('services/create-request', () => {
           request: null,
           routeName: 'user',
           valid: false,
-          sendResponse
+          sendResponse: sendResponseProxy
         };
       });
 
@@ -44,6 +50,7 @@ describe('services/create-request', () => {
         );
         const pathName = '/users/234';
         const result = createRequest(pathName, METHOD, endPoints, mappers);
+        deleteResponseFunctions(result,GETResponse)
         expect(result).toEqual(GETResponse);
       });
 
@@ -57,6 +64,7 @@ describe('services/create-request', () => {
         const pathName = '/users/234';
         const result = createRequest(pathName, 'DELETE', endPoints, mappers);
         GETResponse.method = 'DELETE';
+        deleteResponseFunctions(result,GETResponse)
         expect(result).toEqual(GETResponse);
       });
 
@@ -78,6 +86,7 @@ describe('services/create-request', () => {
           }
         };
         const result = createRequest(pathName, METHOD, endPoints, mappers);
+        deleteResponseFunctions(result,GETResponse)
         expect(result).toEqual(GETResponse);
       });
     });
@@ -151,6 +160,7 @@ describe('services/create-request', () => {
           mappers,
           body
         );
+        deleteResponseFunctions(result,POSTResponse)
         expect(result).toEqual(POSTResponse);
       });
 
@@ -171,6 +181,7 @@ describe('services/create-request', () => {
           body
         );
         POSTResponse.method = 'PATCH';
+        deleteResponseFunctions(result,POSTResponse)
         expect(result).toEqual(POSTResponse);
       });
 
@@ -185,6 +196,7 @@ describe('services/create-request', () => {
         const body: any = { name: 'Jim', count: 43 };
         const result = createRequest(pathName, 'PUT', endPoints, mappers, body);
         POSTResponse.method = 'PUT';
+        deleteResponseFunctions(result,POSTResponse)
         expect(result).toEqual(POSTResponse);
       });
 
@@ -199,8 +211,14 @@ describe('services/create-request', () => {
         POSTResponse.body.name.value = undefined;
         POSTResponse.body.count.valid = false;
         POSTResponse.body.count.value = undefined;
+        deleteResponseFunctions(result,POSTResponse)
         expect(result).toEqual(POSTResponse);
       });
     });
   });
 });
+
+function deleteResponseFunctions(result:any, expectedResult:any){
+  delete result.sendResponse
+  delete expectedResult.sendResponse
+}
