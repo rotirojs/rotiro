@@ -1,7 +1,7 @@
+import { createError, ErrorCodes } from '../../errors/error-codes';
 import { RequestDetail } from '../../type-defs';
 import { ExtractedRequestDetail } from '../../type-defs/internal';
 import { extractRequestDetails } from './extract-detail';
-import { createError, ErrorCodes } from '../../errors/error-codes';
 
 describe('utils/request-params/extract-detail', () => {
   let requestDetail: RequestDetail;
@@ -130,7 +130,12 @@ describe('utils/request-params/extract-detail', () => {
       requestDetail,
       ''
     );
-    expect(response).toEqual({ body: {}, method: 'GET', fullPath: '/' });
+    expect(response).toEqual({
+      body: {},
+      method: 'GET',
+      fullPath: '/',
+      headers: {}
+    });
   });
 
   it('Return all data from a request', () => {
@@ -138,7 +143,26 @@ describe('utils/request-params/extract-detail', () => {
       requestDetail,
       ''
     );
-    expect(response).toEqual({ body: {}, method: 'GET', fullPath: '/' });
+    expect(response).toEqual({
+      body: {},
+      method: 'GET',
+      fullPath: '/',
+      headers: {}
+    });
+  });
+
+  it('Return all data from a request without headers', () => {
+    requestDetail.headers = undefined as any;
+    const response: ExtractedRequestDetail = extractRequestDetails(
+      requestDetail,
+      ''
+    );
+    expect(response).toEqual({
+      body: {},
+      method: 'GET',
+      fullPath: '/',
+      headers: {}
+    });
   });
 
   it('Ignore none matching base path', () => {
@@ -146,6 +170,11 @@ describe('utils/request-params/extract-detail', () => {
       requestDetail,
       '/a-different-base-page'
     );
-    expect(response).toEqual({ body: {}, method: 'GET', fullPath: '/' });
+    expect(response).toEqual({
+      body: {},
+      method: 'GET',
+      fullPath: '/',
+      headers: {}
+    });
   });
 });

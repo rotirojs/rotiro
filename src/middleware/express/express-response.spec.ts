@@ -1,5 +1,5 @@
-import { ExpressResponse } from './express-response';
 import { RequestDetail } from '../../type-defs';
+import { ExpressResponse } from './express-response';
 
 describe('middleware/express/express-response', () => {
   let request: any;
@@ -28,6 +28,14 @@ describe('middleware/express/express-response', () => {
     expect(requestDetail.url).toEqual('/ping');
   });
 
+  it('Maps headers from request to request detail', () => {
+    request.headers = { Authorization: 'asdf' };
+    expressResponse = new ExpressResponse(request, response);
+    const requestDetail: RequestDetail = expressResponse.requestDetail;
+
+    expect(requestDetail.headers).toEqual({ authorization: 'asdf' });
+  });
+
   it('Calls the response on express', () => {
     expressResponse.sendResponse(403, 'A message', 'text/html');
     expect(response.type).toBeCalledWith('text/html');
@@ -47,5 +55,4 @@ describe('middleware/express/express-response', () => {
     const requestDetail: RequestDetail = expressResponse.requestDetail;
     expect(requestDetail.body).toEqual(body);
   });
-
 });

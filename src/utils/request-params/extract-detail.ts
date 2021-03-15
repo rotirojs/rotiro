@@ -1,7 +1,7 @@
-import {RequestDetail, RestMethods} from '../../type-defs';
-import {createError, ErrorCodes} from '../../errors/error-codes';
-import {cleanBasePath} from '../paths';
-import {ExtractedRequestDetail} from '../../type-defs/internal';
+import { createError, ErrorCodes } from '../../errors/error-codes';
+import { RequestDetail, RestMethods } from '../../type-defs';
+import { ExtractedRequestDetail } from '../../type-defs/internal';
+import { cleanBasePath } from '../paths';
 
 export function extractRequestDetails(
   requestDetail: RequestDetail,
@@ -10,6 +10,8 @@ export function extractRequestDetails(
   if (!requestDetail.url || !requestDetail.method) {
     throw createError(ErrorCodes.E103);
   }
+
+  const headers: Record<string, string> = requestDetail.headers || {};
 
   let fullPath = cleanBasePath(requestDetail.url);
 
@@ -27,5 +29,5 @@ export function extractRequestDetails(
     ? requestDetail.body || {}
     : {};
 
-  return { fullPath, method, body };
+  return { fullPath, method, body, headers };
 }

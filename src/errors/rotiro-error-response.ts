@@ -3,10 +3,6 @@ import { RotiroError } from './rotiro-error';
 export class RotiroErrorResponse extends RotiroError {
   public readonly status: number;
 
-  public get name(): string {
-    return 'RotiroErrorResponse';
-  }
-
   constructor(
     message: string,
     status: number,
@@ -15,5 +11,9 @@ export class RotiroErrorResponse extends RotiroError {
   ) {
     super(message, content, errorCode);
     this.status = status;
+  }
+
+  public get name(): string {
+    return 'RotiroErrorResponse';
   }
 }

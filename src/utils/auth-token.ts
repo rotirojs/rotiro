@@ -1,8 +1,13 @@
 import { createError, ErrorCodes } from '../errors/error-codes';
+import { ApiRequestParam } from '../type-defs';
 import { trimString } from './text';
 
-export function getAuthToken(request: any, tokenName: string): string {
-  if (!request) {
+export function getAuthToken(
+  tokenName: string,
+  headers: Record<string, string>,
+  query?: Record<string, ApiRequestParam>
+): string {
+  if (!headers) {
     throw createError(ErrorCodes.E114);
   }
 
@@ -11,18 +16,16 @@ export function getAuthToken(request: any, tokenName: string): string {
   if (!tokenName) {
     throw createError(ErrorCodes.E115);
   }
-  if (request.headers) {
-    for (const header of Object.keys(request.headers)) {
-      if (header.toLowerCase() === tokenName) {
-        return request.headers[header];
-      }
-    }
+
+  const authTokenValue: string = headers[tokenName];
+  if (typeof authTokenValue !== 'undefined') {
+    return authTokenValue;
   }
 
-  if (request.query) {
-    for (const header of Object.keys(request.query)) {
-      if (header.toLowerCase() === tokenName) {
-        return request.query[header];
+  if (query) {
+    for (const headerKey of Object.keys(query)) {
+      if (headerKey.toLowerCase() === tokenName) {
+        return query[headerKey].value;
       }
     }
   }

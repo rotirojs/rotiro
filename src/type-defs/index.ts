@@ -7,21 +7,16 @@ export interface ApiRequest {
   pathName: string; // path e.g. /user/334343
   method: RestMethods; // GET etc
   valid: boolean; // is request valid e.g. all params have passed
+  authTokenValue?: string;
   authenticated: boolean; // Is the request authenticated or not
-  auth?: any; // auth details - probably going to be generic e.g. include user stuff
+  meta: any; // auth details - probably going to be generic e.g. include user stuff
   path: Record<string, ApiRequestParam>;
   body: Record<string, ApiRequestParam>;
   query: Record<string, ApiRequestParam>;
-  rawBody: any; // raw body - assume json for now
-  rawQuery: string; // query string after ? e.g. test=case&some=other
-  request?: any; // express request
-  response?: any;
-  sendResponse: (
-    // apiRequest: ApiRequest,
-    body: any,
-    status?: number,
-    contentType?: string
-  ) => void;
+  headers: Record<string, string>;
+  rawBody?: any; // raw body - assume json for now
+  rawQuery?: string; // query string after ? e.g. test=case&some=other
+  sendResponse: SendResponse;
 }
 
 export interface ApiResponse {
@@ -42,7 +37,11 @@ export interface RouteNamePattern {
   pattern: any;
 }
 
-export type SendResponse=(status: number, body: any, contentType: string) => void;
+export type SendResponse = (
+  status: number,
+  body: any,
+  contentType: string
+) => void;
 
 export type ControlerFunc = (apiRequest: ApiRequest) => void;
 
@@ -116,9 +115,8 @@ export interface ApiOptions {
 }
 
 export interface RotiroMiddleware {
-  // extractRequestDetail: () => RequestDetail;
   sendResponse: SendResponse;
-  requestDetail: RequestDetail
+  requestDetail: RequestDetail;
 }
 
 export interface RequestDetail {

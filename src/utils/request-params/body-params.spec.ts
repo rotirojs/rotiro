@@ -343,8 +343,6 @@ describe('utils/request-params/body-params', () => {
         id: {
           type: 'string',
           array: true
-          // optional?: boolean;
-          // meta?: RouteMeta;
         }
       };
 

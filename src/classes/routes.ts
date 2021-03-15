@@ -12,6 +12,7 @@ import { Controllers } from './controllers';
 import { Endpoints } from './endpoints';
 
 export class Routes {
+
   public get locked(): boolean {
     return this._locked;
   }

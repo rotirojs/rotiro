@@ -5,10 +5,6 @@ export class Controllers {
   private controllers: Record<string, Record<string, ControlerFunc>> = {};
   private _locked: boolean = false;
 
-  // constructor() {
-  //   // ref to endpoints
-  // }
-
   public get locked(): boolean {
     return this._locked;
   }

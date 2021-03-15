@@ -1,12 +1,13 @@
 import { Api } from '../../classes';
 import { router } from './index';
+
 jest.mock('../../classes');
 
 describe('middleware/express', () => {
   let api: Api;
   beforeEach(() => {
     Api.handleRequest = jest.fn();
-    //api={handleRequest:jest.fn()} as any
+    api = new Api();
   });
 
   describe('router', () => {

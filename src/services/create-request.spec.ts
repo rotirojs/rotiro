@@ -1,15 +1,8 @@
 import { Endpoints } from '../classes';
 import { Mappers } from '../classes/mappers';
-import {ApiRequest, MethodSchema, RestMethods} from '../type-defs';
+import { MethodSchema, RestMethods } from '../type-defs';
 import { createRequest } from './create-request';
-import { sendResponse } from './send-response';
-const sendResponseProxy = (
-  body: any,
-  status: number = 200,
-  contentType?: string
-) => {
-  sendResponse(undefined as any, body, status, contentType);
-};
+
 describe('services/create-request', () => {
   describe('createRequest', () => {
     describe('GET requests', () => {
@@ -22,7 +15,6 @@ describe('services/create-request', () => {
         mappers = new Mappers();
         GETResponse = {
           authenticated: false,
-          rawBody: undefined,
           body: {},
           method: 'GET',
           pathName: '/users/234',
@@ -30,12 +22,11 @@ describe('services/create-request', () => {
             id: { name: 'id', type: 'number', valid: true, value: 234 }
           },
           pathPattern: /^\/users(?:\/([^\/#\?]+?))[\/#\?]?$/i,
-          rawQuery: '',
           query: {},
-          request: null,
           routeName: 'user',
           valid: false,
-          sendResponse: sendResponseProxy
+          headers: {},
+          meta: {}
         };
       });
 
@@ -136,12 +127,11 @@ describe('services/create-request', () => {
             id: { name: 'id', type: 'number', valid: true, value: 234 }
           },
           pathPattern: /^\/users(?:\/([^\/#\?]+?))[\/#\?]?$/i,
-          rawQuery: '',
           query: {},
-          request: null,
           routeName: 'user',
           valid: false,
-          sendResponse
+          meta: {},
+          headers: {}
         };
       });
 

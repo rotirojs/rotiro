@@ -1,11 +1,18 @@
-import {RequestDetail, RotiroMiddleware} from '../../type-defs';
+import { RequestDetail, RotiroMiddleware } from '../../type-defs';
 
 export class ExpressResponse implements RotiroMiddleware {
   private readonly _requestDetail: RequestDetail;
 
   constructor(private readonly request, private readonly response) {
     const headers: Record<string, string> = {};
-    // TODO add the headers
+
+    if (request.headers) {
+      // copy the headers over and make all keys lower case
+      for (const header of Object.keys(request.headers)) {
+        headers[header.toLowerCase()] = request.headers[header];
+      }
+    }
+
     this._requestDetail = {
       method: request.method,
       url: request.originalUrl,
@@ -18,7 +25,7 @@ export class ExpressResponse implements RotiroMiddleware {
     return this._requestDetail;
   }
 
-  sendResponse(status: number, body: any, contentType?: string) {
+  public sendResponse(status: number, body: any, contentType?: string) {
     this.response.type(contentType || 'text/plain');
     this.response.status(status).send(String(body));
   }

@@ -1,4 +1,4 @@
-import {HttpErrors} from './http-error-codes';
+import { HttpErrors } from './http-error-codes';
 
 describe('errors/http-error-codes', () => {
   const errorCodes: number[] = [
@@ -45,9 +45,8 @@ describe('errors/http-error-codes', () => {
   ];
 
   it('Should contain all common http error codes', () => {
-    for(const errorCode of errorCodes){
-      expect(HttpErrors[errorCode]).toBeTruthy()
+    for (const errorCode of errorCodes) {
+      expect(HttpErrors[errorCode]).toBeTruthy();
     }
-
   });
 });
