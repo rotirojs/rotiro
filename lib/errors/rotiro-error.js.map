@@ -1,0 +1,1 @@
+{"version":3,"file":"rotiro-error.js","sourceRoot":"","sources":["../../src/errors/rotiro-error.ts"],"names":[],"mappings":";;;AAAA,MAAa,WAAY,SAAQ,KAAK;IAIpC,YAAY,OAAe,EAAE,OAAa,EAAE,SAAkB;QAC5D,KAAK,CAAC,OAAO,CAAC,CAAC;QACf,IAAI,CAAC,OAAO,GAAG,OAAO,CAAC;QACvB,IAAI,CAAC,SAAS,GAAG,SAAS,CAAC;IAC7B,CAAC;IAED,IAAW,IAAI;QACb,OAAO,aAAa,CAAC;IACvB,CAAC;CACF;AAbD,kCAaC"}

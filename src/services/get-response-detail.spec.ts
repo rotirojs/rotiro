@@ -1,5 +1,5 @@
-import { getResponseDetail } from './get-response-detail';
 import { ResponseDetail } from '../type-defs/internal';
+import { getResponseDetail } from './get-response-detail';
 
 describe('services/send-response', () => {
   describe('getResponseDetail', () => {

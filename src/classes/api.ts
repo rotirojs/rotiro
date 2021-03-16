@@ -2,6 +2,7 @@ import { RotiroErrorResponse } from '../errors';
 import { createError, ErrorCodes } from '../errors/error-codes';
 import { HttpErrors } from '../errors/http-error-codes';
 import { createRequest } from '../services/create-request';
+import {getResponseDetail} from '../services/get-response-detail';
 import {
   ApiOptions,
   ApiRequest,
@@ -19,7 +20,6 @@ import { Controllers } from './controllers';
 import { Endpoints } from './endpoints';
 import { Mappers } from './mappers';
 import { Routes } from './routes';
-import {getResponseDetail} from '../services/get-response-detail';
 
 export class Api {
   public get controllers(): Controllers {
@@ -101,12 +101,12 @@ export class Api {
 
     try {
       apiRequest.sendResponse = (
-        body: any,
-        status: number = 200,
-        contentType?: string
+        bodyContent: any,
+        status: number,
+        contentType: string
       ) => {
         const responseDetail: ResponseDetail = getResponseDetail(
-          body,
+          bodyContent,
           status,
           contentType
         );
