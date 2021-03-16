@@ -77,7 +77,7 @@ export class Api {
         headers
       );
     } catch (ex) {
-      Api.handleRouteError(ex, middleware.sendResponse, api.options.custom404);
+      Api.handleRouteError(ex, middleware.sendResponse.bind(middleware), api.options.custom404);
       return;
     }
 
