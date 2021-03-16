@@ -24,7 +24,7 @@ describe('services/create-request', () => {
           pathPattern: /^\/users(?:\/([^\/#\?]+?))[\/#\?]?$/i,
           query: {},
           routeName: 'user',
-          valid: false,
+          valid: true,
           headers: {},
           meta: {}
         };
@@ -43,6 +43,40 @@ describe('services/create-request', () => {
         const result = createRequest(pathName, METHOD, endPoints, mappers);
         deleteResponseFunctions(result, GETResponse);
         expect(result).toEqual(GETResponse);
+      });
+
+      it('Should set the auth token name', () => {
+        endPoints.add('users', '/users',
+          {
+            GET: { auth: 'authToken' }
+          }
+        );
+        const pathName = '/users';
+        const result = createRequest(pathName, METHOD, endPoints, mappers);
+        expect(result.authTokenName).toEqual('authToken');
+      });
+
+      it('Should fail if path does not contain a valid parameter', () => {
+        endPoints.add(
+          'user',
+          '/users/:id',
+          [],
+          [{ name: 'id', type: 'number' }]
+        );
+        const pathName = '/users/bob';
+        const result = createRequest(pathName, METHOD, endPoints, mappers);
+
+        expect(result.valid).toEqual(false);
+      });
+
+      it('Should fail if query does not contain a valid parameter', () => {
+        endPoints.add('user', '/users', {
+          GET: { queryParams: [{ name: 'version', type: 'number' }] }
+        });
+        const pathName = '/users?version=bob';
+        const result = createRequest(pathName, METHOD, endPoints, mappers);
+
+        expect(result.valid).toEqual(false);
       });
 
       it('Should create a request from a DELETE Path', () => {
@@ -129,7 +163,7 @@ describe('services/create-request', () => {
           pathPattern: /^\/users(?:\/([^\/#\?]+?))[\/#\?]?$/i,
           query: {},
           routeName: 'user',
-          valid: false,
+          valid: true,
           meta: {},
           headers: {}
         };
@@ -196,6 +230,7 @@ describe('services/create-request', () => {
         ]);
         const pathName = '/users/234';
         const result = createRequest(pathName, METHOD, endPoints, mappers);
+        POSTResponse.valid = false;
         POSTResponse.rawBody = undefined;
         POSTResponse.body.name.valid = false;
         POSTResponse.body.name.value = undefined;

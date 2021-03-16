@@ -3,6 +3,7 @@ import { Mappers } from '../classes/mappers';
 import {
   ApiEndpointSchema,
   ApiRequest,
+  ApiRequestParam,
   MethodSchema,
   RestMethods,
   RouteNamePattern,
@@ -15,6 +16,7 @@ import {
   getPathParams,
   getQueryParams
 } from '../utils/request-params';
+import {validateRequest} from '../utils/request-params/validate-request';
 
 export function createRequest(
   fullPath: string,
@@ -43,7 +45,7 @@ export function createRequest(
     pathPattern: endpoint.pattern,
     pathName,
     method,
-    valid: false,
+    valid: validateRequest(pathParams, body, query),
     authenticated: false,
     path: pathParams,
     body,
@@ -67,3 +69,35 @@ export function createRequest(
 
   return apiRequest;
 }
+//
+// function isRequestValid(
+//   path: Record<string, ApiRequestParam>,
+//   body: Record<string, ApiRequestParam>,
+//   query: Record<string, ApiRequestParam>
+// ): boolean {
+//   if (path) {
+//     for (const pathValue of Object.values(path)) {
+//       if (!pathValue.valid) {
+//         return false;
+//       }
+//     }
+//   }
+//
+//   if (body) {
+//     for (const bodyValue of Object.values(body)) {
+//       if (!bodyValue.valid) {
+//         return false;
+//       }
+//     }
+//   }
+//
+//   if (query) {
+//     for (const queryValue of Object.values(query)) {
+//       if (!queryValue.valid) {
+//         return false;
+//       }
+//     }
+//   }
+//
+//   return true;
+// }

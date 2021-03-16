@@ -1,5 +1,5 @@
 import { Api } from '../../classes';
-import { router } from './index';
+import { expressRouter as router } from './index';
 
 jest.mock('../../classes');
 
