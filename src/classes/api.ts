@@ -118,7 +118,7 @@ export class Api {
         );
       };
 
-      func.call(undefined, apiRequest);
+      await func.call(undefined, apiRequest);
     } catch (ex) {
       Api.handleRouteError(ex, middleware.sendResponse, api.options.custom404);
       return;
