@@ -4,8 +4,8 @@
   "description": "Rotiro API Middleware",
   "author": "Alex Everitt",
   "scripts": {
-    "test": "jest",
-    "test:ci": "jest --ci --coverage",
+    "test": "jest --detectOpenHandles",
+    "test:ci": "jest --ci --coverage --detectOpenHandles",
     "clear-build": "rm -rf lib/*",
     "build": "rm -rf lib/* && tsc",
     "prepublishOnly": "rm -rf lib/* && tsc",
