@@ -5,7 +5,8 @@ import {
   ApiRequest,
   MethodSchema,
   RestMethods,
-  RouteNamePattern
+  RouteNamePattern,
+  SendResponse
 } from '../type-defs';
 import { splitFullPath } from '../utils';
 import { getRouteName } from '../utils/path-matcher';
@@ -14,14 +15,14 @@ import {
   getPathParams,
   getQueryParams
 } from '../utils/request-params';
-import { sendResponse } from './send-response';
 
 export function createRequest(
   fullPath: string,
   method: RestMethods,
   endpoints: Endpoints,
   mappers: Mappers,
-  rawBody?: object
+  rawBody?: object,
+  headers?: Record<string, string>
 ): ApiRequest {
   const { path: pathName, query: rawQuery } = splitFullPath(fullPath);
 
@@ -37,20 +38,32 @@ export function createRequest(
     : {};
   const pathParams = getPathParams(pathName, endpoint, mappers);
 
-  return {
+  const apiRequest: ApiRequest = {
     routeName,
     pathPattern: endpoint.pattern,
     pathName,
-    authTokenName: methodSchema.auth,
     method,
     valid: false,
     authenticated: false,
     path: pathParams,
     body,
     query,
-    rawBody,
-    rawQuery,
-    request: null,
-    sendResponse
+    headers: headers || {},
+    meta: {},
+    sendResponse: {} as SendResponse // stub out func until replaced
   };
+
+  if (rawQuery) {
+    apiRequest.rawQuery = rawQuery;
+  }
+
+  if (rawBody) {
+    apiRequest.rawBody = rawBody;
+  }
+
+  if (methodSchema.auth) {
+    apiRequest.authTokenName = methodSchema.auth;
+  }
+
+  return apiRequest;
 }

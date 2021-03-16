@@ -1,12 +1,20 @@
+import { RotiroErrorResponse } from '../errors';
+import { createError, ErrorCodes } from '../errors/error-codes';
+import { HttpErrors } from '../errors/http-error-codes';
 import { createRequest } from '../services/create-request';
+import { getResponseDetail } from '../services/get-response-detail';
 import {
   ApiOptions,
   ApiRequest,
   AuthenticatorFunc,
-  ErrorMessage,
-  RestMethods
+  RequestDetail,
+  RotiroMiddleware,
+  SendResponse
 } from '../type-defs';
+import { ExtractedRequestDetail, ResponseDetail } from '../type-defs/internal';
 import { cleanBasePath } from '../utils';
+import { getAuthToken } from '../utils/auth-token';
+import { extractRequestDetails } from '../utils/request-params/extract-detail';
 import { Authenticators } from './authenticators';
 import { Controllers } from './controllers';
 import { Endpoints } from './endpoints';
@@ -14,6 +22,7 @@ import { Mappers } from './mappers';
 import { Routes } from './routes';
 
 export class Api {
+
   public get controllers(): Controllers {
     return this._controllers;
   }
@@ -38,32 +47,117 @@ export class Api {
     return this._locked;
   }
 
-  // to handle alternatives to express
-  private static extractRequestDetails(
-    request: any,
-    basePath: string
-  ): { method: RestMethods; body: any; fullPath: string } {
-    if (!request.originalUrl || !request.method) {
-      throw new Error('Original request not valid');
+  public static async handleRequest(
+    api: Api,
+    middleware: RotiroMiddleware
+  ): Promise<void> {
+    const requestDetail: RequestDetail = middleware.requestDetail;
+
+    if (!requestDetail.url || !requestDetail.method) {
+      throw createError(ErrorCodes.E103);
+    }
+    const {
+      method,
+      body,
+      fullPath,
+      headers
+    }: ExtractedRequestDetail = extractRequestDetails(
+      requestDetail,
+      api.basePath
+    );
+
+    let apiRequest: ApiRequest;
+    try {
+      apiRequest = createRequest(
+        fullPath,
+        method,
+        api.endpoints,
+        api.mappers,
+        body,
+        headers
+      );
+    } catch (ex) {
+      Api.handleRouteError(ex, middleware.sendResponse, api.options.custom404);
+      return;
     }
 
-    let fullPath = cleanBasePath(request.originalUrl);
-
-    // remove the base path from the original url
-    if (basePath.length <= fullPath.length) {
-      fullPath = fullPath.substr(basePath.length);
+    if (apiRequest.authTokenName) {
+      // call authenticator
+      const authenticator: AuthenticatorFunc = api.authenticators.get(
+        apiRequest.authTokenName
+      );
+      apiRequest.authTokenValue = getAuthToken(
+        apiRequest.authTokenName,
+        apiRequest.headers,
+        apiRequest.query
+      );
+      apiRequest.authenticated = await authenticator(apiRequest);
+      if (!apiRequest.authenticated) {
+        // throw an error
+        middleware.sendResponse(401, HttpErrors[401], 'text/plain');
+      }
     }
 
-    if (fullPath.length === 0) {
-      fullPath = '/';
+    const func = api.controllers.get(apiRequest.routeName, method);
+
+    try {
+      apiRequest.sendResponse = (
+        bodyContent: any,
+        status: number,
+        contentType: string
+      ) => {
+        const responseDetail: ResponseDetail = getResponseDetail(
+          bodyContent,
+          status,
+          contentType
+        );
+        middleware.sendResponse(
+          responseDetail.statusCode,
+          responseDetail.body,
+          responseDetail.contentType
+        );
+      };
+
+      func.call(undefined, apiRequest);
+    } catch (ex) {
+      Api.handleRouteError(ex, middleware.sendResponse, api.options.custom404);
+      return;
     }
+  }
 
-    const method: RestMethods = request.method.toUpperCase() as RestMethods;
-    const body: object = ['PUT', 'PATCH', 'POST'].includes(method)
-      ? request.body
-      : {};
+  private static handleRouteError(
+    ex: any,
+    sendResponse: SendResponse,
+    custom404?: boolean
+  ) {
+    switch (ex.name) {
+      case 'RotiroErrorResponse':
+        // status or 500
+        const responseError: RotiroErrorResponse = ex;
 
-    return { fullPath, method, body };
+        // TODO Set content type correctly
+        sendResponse(
+          responseError.status,
+          responseError.content ||
+            responseError.message ||
+            HttpErrors[responseError.status] ||
+            'Api Error',
+          'text/plain'
+        );
+
+        return;
+      case 'RotiroError':
+        if (ex.errorCode === 101) {
+          if (!custom404) {
+            sendResponse(404, HttpErrors[404], 'text/plain');
+          } else {
+            throw ex;
+          }
+        }
+
+        sendResponse(500, HttpErrors[500], 'text/plain');
+        return;
+    }
   }
   private readonly _routes: Routes;
   private readonly _authenticators: Authenticators;
@@ -96,10 +190,7 @@ export class Api {
     );
 
     if (controllerErrors.length) {
-      const errorMessage: string = `Not all endpoints have a controller (${controllerErrors.join(
-        ', '
-      )})`;
-      throw new Error(errorMessage);
+      throw createError(ErrorCodes.E117, controllerErrors);
     }
 
     const authTokens: string[] = this._endpoints.getAuthTokenNames();
@@ -109,10 +200,7 @@ export class Api {
         authTokens
       );
       if (authenticatorErrors.length) {
-        const errorMessage: string = `One or more auth tokens to not have a handler (${authenticatorErrors.join(
-          ', '
-        )})`;
-        throw new Error(errorMessage);
+        throw createError(ErrorCodes.E118, authenticatorErrors);
       }
     }
 
@@ -121,80 +209,5 @@ export class Api {
     this._controllers.lock();
     this._mappers.lock();
     this._locked = true;
-  }
-
-  public router() {
-    const self = this;
-    return async (request: any, response: any) => {
-      if (!self.locked) {
-        throw new Error('Api not built');
-      }
-
-      const {
-        method,
-        body,
-        fullPath
-      }: {
-        method: RestMethods;
-        body: any;
-        fullPath: string;
-      } = Api.extractRequestDetails(request, this.basePath);
-
-      let apiRequest: ApiRequest;
-      try {
-        apiRequest = createRequest(
-          fullPath,
-          method,
-          this.endpoints,
-          this.mappers,
-          body
-        );
-      } catch (ex) {
-        // check to see if the error should be handled automatically
-        if (!this.options.custom404 && ex.message === 'Path not found') {
-          // create a 404 response
-          response.status(404).send('Not Found');
-          return;
-        } else {
-          throw ex;
-        }
-      }
-
-      apiRequest.request = request;
-      apiRequest.response = response;
-
-      if (apiRequest.authTokenName) {
-        // call authenticator
-        const authenticator: AuthenticatorFunc = this.authenticators.get(
-          apiRequest.authTokenName
-        );
-        apiRequest.authenticated = await authenticator(apiRequest);
-        if (!apiRequest.authenticated) {
-          // throw an error
-          return self.sendError(response, {
-            statusCode: 401,
-            message: 'Unauthorized'
-          });
-        }
-      }
-      const func = self.controllers.get(apiRequest.routeName, method);
-
-      // update the request and response object before passing it in
-
-      try {
-        // test auth
-        func.call(self, apiRequest);
-      } catch (ex) {
-        // look for a particular error structure and return
-        // otherwise return a 500
-        self.sendError(response, { statusCode: 500, message: 'Unknown error' });
-      }
-    };
-  }
-
-  private sendError(response: any, error: ErrorMessage) {
-    // This needs to manage more than just express in the future
-    // add middleware hook to manage sending a response
-    response.status(error.statusCode).send(error);
   }
 }

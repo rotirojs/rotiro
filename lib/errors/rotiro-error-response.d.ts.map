@@ -1,0 +1,1 @@
+{"version":3,"file":"rotiro-error-response.d.ts","sourceRoot":"","sources":["../../src/errors/rotiro-error-response.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,MAAM,gBAAgB,CAAC;AAE7C,qBAAa,mBAAoB,SAAQ,WAAW;IAClD,SAAgB,MAAM,EAAE,MAAM,CAAC;gBAG7B,OAAO,EAAE,MAAM,EACf,MAAM,EAAE,MAAM,EACd,OAAO,CAAC,EAAE,GAAG,EACb,SAAS,CAAC,EAAE,MAAM;IAMpB,IAAW,IAAI,IAAI,MAAM,CAExB;CACF"}

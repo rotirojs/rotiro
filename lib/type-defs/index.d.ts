@@ -6,16 +6,16 @@ export interface ApiRequest {
     pathName: string;
     method: RestMethods;
     valid: boolean;
+    authTokenValue?: string;
     authenticated: boolean;
-    auth?: any;
+    meta: any;
     path: Record<string, ApiRequestParam>;
     body: Record<string, ApiRequestParam>;
     query: Record<string, ApiRequestParam>;
-    rawBody: any;
-    rawQuery: string;
-    request?: any;
-    response?: any;
-    sendResponse: (apiRequest: ApiRequest, body: any, status?: number, contentType?: string) => void;
+    headers: Record<string, string>;
+    rawBody?: any;
+    rawQuery?: string;
+    sendResponse: SendResponse;
 }
 export interface ApiResponse {
     sendError: (status: number, message: string, data: any) => void;
@@ -32,6 +32,7 @@ export interface RouteNamePattern {
     routeName: string;
     pattern: any;
 }
+export declare type SendResponse = (status: number, body: any, contentType: string) => void;
 export declare type ControlerFunc = (apiRequest: ApiRequest) => void;
 export declare type AuthenticatorFunc = (apiRequest: ApiRequest) => Promise<boolean>;
 export declare type DataMapperFunc = (data: any | any[]) => any | any[];
@@ -88,5 +89,15 @@ export interface RouteMeta {
 export interface ApiOptions {
     custom404?: boolean;
     basePath?: string;
+}
+export interface RotiroMiddleware {
+    sendResponse: SendResponse;
+    requestDetail: RequestDetail;
+}
+export interface RequestDetail {
+    method: string;
+    url: string;
+    body?: object;
+    headers: Record<string, string>;
 }
 //# sourceMappingURL=index.d.ts.map

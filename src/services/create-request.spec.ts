@@ -2,7 +2,6 @@ import { Endpoints } from '../classes';
 import { Mappers } from '../classes/mappers';
 import { MethodSchema, RestMethods } from '../type-defs';
 import { createRequest } from './create-request';
-import { sendResponse } from './send-response';
 
 describe('services/create-request', () => {
   describe('createRequest', () => {
@@ -16,7 +15,6 @@ describe('services/create-request', () => {
         mappers = new Mappers();
         GETResponse = {
           authenticated: false,
-          rawBody: undefined,
           body: {},
           method: 'GET',
           pathName: '/users/234',
@@ -24,12 +22,11 @@ describe('services/create-request', () => {
             id: { name: 'id', type: 'number', valid: true, value: 234 }
           },
           pathPattern: /^\/users(?:\/([^\/#\?]+?))[\/#\?]?$/i,
-          rawQuery: '',
           query: {},
-          request: null,
           routeName: 'user',
           valid: false,
-          sendResponse
+          headers: {},
+          meta: {}
         };
       });
 
@@ -44,6 +41,7 @@ describe('services/create-request', () => {
         );
         const pathName = '/users/234';
         const result = createRequest(pathName, METHOD, endPoints, mappers);
+        deleteResponseFunctions(result, GETResponse);
         expect(result).toEqual(GETResponse);
       });
 
@@ -57,6 +55,7 @@ describe('services/create-request', () => {
         const pathName = '/users/234';
         const result = createRequest(pathName, 'DELETE', endPoints, mappers);
         GETResponse.method = 'DELETE';
+        deleteResponseFunctions(result, GETResponse);
         expect(result).toEqual(GETResponse);
       });
 
@@ -78,6 +77,7 @@ describe('services/create-request', () => {
           }
         };
         const result = createRequest(pathName, METHOD, endPoints, mappers);
+        deleteResponseFunctions(result, GETResponse);
         expect(result).toEqual(GETResponse);
       });
     });
@@ -127,12 +127,11 @@ describe('services/create-request', () => {
             id: { name: 'id', type: 'number', valid: true, value: 234 }
           },
           pathPattern: /^\/users(?:\/([^\/#\?]+?))[\/#\?]?$/i,
-          rawQuery: '',
           query: {},
-          request: null,
           routeName: 'user',
           valid: false,
-          sendResponse
+          meta: {},
+          headers: {}
         };
       });
 
@@ -144,7 +143,14 @@ describe('services/create-request', () => {
         ]);
         const pathName = '/users/234';
         const body: any = { name: 'Jim', count: 43 };
-        const result = createRequest(pathName, METHOD, endPoints, mappers, body);
+        const result = createRequest(
+          pathName,
+          METHOD,
+          endPoints,
+          mappers,
+          body
+        );
+        deleteResponseFunctions(result, POSTResponse);
         expect(result).toEqual(POSTResponse);
       });
 
@@ -157,8 +163,15 @@ describe('services/create-request', () => {
         ]);
         const pathName = '/users/234';
         const body: any = { name: 'Jim', count: 43 };
-        const result = createRequest(pathName, 'PATCH', endPoints, mappers, body);
+        const result = createRequest(
+          pathName,
+          'PATCH',
+          endPoints,
+          mappers,
+          body
+        );
         POSTResponse.method = 'PATCH';
+        deleteResponseFunctions(result, POSTResponse);
         expect(result).toEqual(POSTResponse);
       });
 
@@ -173,6 +186,7 @@ describe('services/create-request', () => {
         const body: any = { name: 'Jim', count: 43 };
         const result = createRequest(pathName, 'PUT', endPoints, mappers, body);
         POSTResponse.method = 'PUT';
+        deleteResponseFunctions(result, POSTResponse);
         expect(result).toEqual(POSTResponse);
       });
 
@@ -187,8 +201,14 @@ describe('services/create-request', () => {
         POSTResponse.body.name.value = undefined;
         POSTResponse.body.count.valid = false;
         POSTResponse.body.count.value = undefined;
+        deleteResponseFunctions(result, POSTResponse);
         expect(result).toEqual(POSTResponse);
       });
     });
   });
 });
+
+function deleteResponseFunctions(result: any, expectedResult: any) {
+  delete result.sendResponse;
+  delete expectedResult.sendResponse;
+}

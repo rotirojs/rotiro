@@ -1,7 +1,9 @@
+import { createError, ErrorCodes } from '../errors/error-codes';
 import { DataMapperFunc } from '../type-defs';
 import { jsonMapper, numberMapper, stringMapper } from '../utils/mappers';
 
 export class Mappers {
+
   public get locked(): boolean {
     return this._locked;
   }
@@ -33,7 +35,7 @@ export class Mappers {
 
   public registerMapper(type: string, mapper: DataMapperFunc): void {
     if (this.locked) {
-      throw new Error('Api is locked and cannot be updated');
+      throw createError(ErrorCodes.E105);
     }
     this._mappers[type] = mapper;
   }

@@ -18,6 +18,8 @@ jobs:
           paths:
             - node_modules
       - run:
+          environment:
+            NODE_OPTIONS: --max_old_space_size=4096
           command:
             yarn install && yarn test:ci
       - codecov/upload:

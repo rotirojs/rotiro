@@ -49,16 +49,6 @@ export function sanitisePath(path: string): string {
   }
 
   return routePath;
-  // const matches: RegExpMatchArray | null = routePath.match(/(\/)(:[^\/]+)/gi)
-  // let paramNames: string[] = []
-  // if (matches && matches.length) {
-  //   paramNames = matches.map((match: string) => {
-  //     return match.substr(2)
-  //   })
-  // }
-  // routePath = routePath.replace(/(\/)(:[^\/]+)/gi, '/:')
-  //
-  // return { routePath, paramNames }
 }
 
 export function splitFullPath(

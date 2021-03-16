@@ -1,4 +1,5 @@
 import { Mappers } from '../../classes/mappers';
+import { createError, ErrorCodes } from '../../errors/error-codes';
 import { ApiEndpointSchema, ApiRequestParam } from '../../type-defs';
 
 export function getPathParams(
@@ -11,7 +12,7 @@ export function getPathParams(
     // get the names and values from the path
     let params: string[] | null = path.match(endpoint.pattern);
     if (!params) {
-      throw new Error('Invalid parameters');
+      throw createError(ErrorCodes.E116);
     }
     params = params.slice(1, endpoint.pathParams.length + 1);
     for (let i = 0; i < endpoint.pathParams.length; i++) {
