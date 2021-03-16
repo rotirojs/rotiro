@@ -2,7 +2,7 @@ import { RotiroErrorResponse } from '../errors';
 import { createError, ErrorCodes } from '../errors/error-codes';
 import { HttpErrors } from '../errors/http-error-codes';
 import { createRequest } from '../services/create-request';
-import {getResponseDetail} from '../services/get-response-detail';
+import { getResponseDetail } from '../services/get-response-detail';
 import {
   ApiOptions,
   ApiRequest,
@@ -22,6 +22,7 @@ import { Mappers } from './mappers';
 import { Routes } from './routes';
 
 export class Api {
+
   public get controllers(): Controllers {
     return this._controllers;
   }
@@ -158,7 +159,6 @@ export class Api {
         return;
     }
   }
-
   private readonly _routes: Routes;
   private readonly _authenticators: Authenticators;
   private readonly _endpoints: Endpoints;
