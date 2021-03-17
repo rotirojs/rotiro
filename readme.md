@@ -32,7 +32,7 @@ api.routes.add("ping", "/ping", {
   methods: {
     GET: {
       controller: apiRequest => {
-        apiRequest.sendResponse(apiRequest, `Pong : ${Date.now()}`);
+        apiRequest.send(`Pong : ${Date.now()}`);
       }
     }
   }

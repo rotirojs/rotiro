@@ -37,15 +37,20 @@ describe('middleware/express/express-response', () => {
   });
 
   it('Calls the response on express', () => {
-    expressResponse.sendResponse(403, 'A message', 'text/html');
+    expressResponse.sendResponse('A message', 403, 'text/html');
     expect(response.type).toBeCalledWith('text/html');
     expect(response.status).toBeCalledWith(403);
     expect(sendMock).toBeCalledWith('A message');
   });
 
   it('Calls the response on express with default content type', () => {
-    expressResponse.sendResponse(403, 'A message');
+    expressResponse.sendResponse('A message', 403);
     expect(response.type).toBeCalledWith('text/plain');
+  });
+
+  it('Calls the response on express with default status', () => {
+    expressResponse.sendResponse('A message');
+    expect(response.status).toBeCalledWith(200);
   });
 
   it('Return a body object from the request', () => {

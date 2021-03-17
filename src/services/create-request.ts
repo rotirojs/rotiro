@@ -52,7 +52,7 @@ export function createRequest(
     query,
     headers: headers || {},
     meta: {},
-    sendResponse: {} as SendResponse // stub out func until replaced
+    send: {} as SendResponse // stub out func until replaced
   };
 
   if (rawQuery) {

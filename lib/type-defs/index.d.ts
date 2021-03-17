@@ -15,7 +15,7 @@ export interface ApiRequest {
     headers: Record<string, string>;
     rawBody?: any;
     rawQuery?: string;
-    sendResponse: SendResponse;
+    send: SendResponse;
 }
 export interface ApiResponse {
     sendError: (status: number, message: string, data: any) => void;
@@ -32,7 +32,7 @@ export interface RouteNamePattern {
     routeName: string;
     pattern: any;
 }
-export declare type SendResponse = (status: number, body: any, contentType: string) => void;
+export declare type SendResponse = (body: any, status?: number, contentType?: string) => void;
 export declare type ControlerFunc = (apiRequest: ApiRequest) => void;
 export declare type AuthenticatorFunc = (apiRequest: ApiRequest) => Promise<boolean>;
 export declare type DataMapperFunc = (data: any | any[]) => any | any[];

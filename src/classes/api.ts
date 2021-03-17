@@ -22,7 +22,6 @@ import { Mappers } from './mappers';
 import { Routes } from './routes';
 
 export class Api {
-
   public get controllers(): Controllers {
     return this._controllers;
   }
@@ -77,7 +76,11 @@ export class Api {
         headers
       );
     } catch (ex) {
-      Api.handleRouteError(ex, middleware.sendResponse.bind(middleware), api.options.custom404);
+      Api.handleRouteError(
+        ex,
+        middleware.sendResponse.bind(middleware),
+        api.options.custom404
+      );
       return;
     }
 
@@ -94,17 +97,17 @@ export class Api {
       apiRequest.authenticated = await authenticator(apiRequest);
       if (!apiRequest.authenticated) {
         // throw an error
-        middleware.sendResponse(401, HttpErrors[401], 'text/plain');
+        middleware.sendResponse(HttpErrors[401], 401, 'text/plain');
       }
     }
 
     const func = api.controllers.get(apiRequest.routeName, method);
 
     try {
-      apiRequest.sendResponse = (
+      apiRequest.send = (
         bodyContent: any,
-        status: number,
-        contentType: string
+        status?: number,
+        contentType?: string
       ) => {
         const responseDetail: ResponseDetail = getResponseDetail(
           bodyContent,
@@ -112,15 +115,19 @@ export class Api {
           contentType
         );
         middleware.sendResponse(
-          responseDetail.statusCode,
           responseDetail.body,
+          responseDetail.statusCode,
           responseDetail.contentType
         );
       };
 
       await func.call(undefined, apiRequest);
     } catch (ex) {
-      Api.handleRouteError(ex, middleware.sendResponse.bind(middleware), api.options.custom404);
+      Api.handleRouteError(
+        ex,
+        middleware.sendResponse.bind(middleware),
+        api.options.custom404
+      );
       return;
     }
   }
@@ -137,11 +144,11 @@ export class Api {
 
         // TODO Set content type correctly
         sendResponse(
-          responseError.status,
           responseError.content ||
             responseError.message ||
             HttpErrors[responseError.status] ||
             'Api Error',
+          responseError.status,
           'text/plain'
         );
 
@@ -149,13 +156,13 @@ export class Api {
       case 'RotiroError':
         if (ex.errorCode === 101) {
           if (!custom404) {
-            sendResponse(404, HttpErrors[404], 'text/plain');
+            sendResponse(HttpErrors[404], 404, 'text/plain');
           } else {
             throw ex;
           }
         }
 
-        sendResponse(500, HttpErrors[500], 'text/plain');
+        sendResponse(HttpErrors[500], 500, 'text/plain');
         return;
     }
   }
