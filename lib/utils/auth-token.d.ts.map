@@ -1,1 +1,0 @@
-{"version":3,"file":"auth-token.d.ts","sourceRoot":"","sources":["../../src/utils/auth-token.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,eAAe,EAAE,MAAM,cAAc,CAAC;AAG/C,wBAAgB,YAAY,CAC1B,SAAS,EAAE,MAAM,EACjB,OAAO,EAAE,MAAM,CAAC,MAAM,EAAE,MAAM,CAAC,EAC/B,KAAK,CAAC,EAAE,MAAM,CAAC,MAAM,EAAE,eAAe,CAAC,GACtC,MAAM,CAyBR"}
