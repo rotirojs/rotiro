@@ -3,7 +3,6 @@ import { DataMapperFunc } from '../type-defs';
 import { jsonMapper, numberMapper, stringMapper } from '../utils/mappers';
 
 export class Mappers {
-
   public get locked(): boolean {
     return this._locked;
   }

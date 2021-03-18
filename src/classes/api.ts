@@ -144,11 +144,11 @@ export class Api {
 
         // TODO Set content type correctly
         sendResponse(
-          responseError.status,
           responseError.content ||
             responseError.message ||
             HttpErrors[responseError.status] ||
             'Api Error',
+          responseError.status,
           'text/plain'
         );
 

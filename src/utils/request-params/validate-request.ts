@@ -1,4 +1,4 @@
-import {ApiRequestParam} from '../../type-defs';
+import { ApiRequestParam } from '../../type-defs';
 
 export function validateRequest(
   path: Record<string, ApiRequestParam>,

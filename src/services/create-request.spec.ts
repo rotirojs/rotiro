@@ -46,11 +46,9 @@ describe('services/create-request', () => {
       });
 
       it('Should set the auth token name', () => {
-        endPoints.add('users', '/users',
-          {
-            GET: { auth: 'authToken' }
-          }
-        );
+        endPoints.add('users', '/users', {
+          GET: { auth: 'authToken' }
+        });
         const pathName = '/users';
         const result = createRequest(pathName, METHOD, endPoints, mappers);
         expect(result.authTokenName).toEqual('authToken');

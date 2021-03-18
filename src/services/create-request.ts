@@ -16,7 +16,7 @@ import {
   getPathParams,
   getQueryParams
 } from '../utils/request-params';
-import {validateRequest} from '../utils/request-params/validate-request';
+import { validateRequest } from '../utils/request-params/validate-request';
 
 export function createRequest(
   fullPath: string,

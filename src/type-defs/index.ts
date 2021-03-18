@@ -37,8 +37,11 @@ export interface RouteNamePattern {
   pattern: any;
 }
 
-
-export declare type SendResponse = (body: any, status?: number, contentType?: string) => void;
+export declare type SendResponse = (
+  body: any,
+  status?: number,
+  contentType?: string
+) => void;
 
 export type ControlerFunc = (apiRequest: ApiRequest) => void;
 

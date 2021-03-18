@@ -257,8 +257,8 @@ describe('classes/api', () => {
       api.build();
       await Api.handleRequest(api, middleware);
       expect(middleware.sendResponse).toBeCalledWith(
-        400,
         'Custom message',
+        400,
         'text/plain'
       );
     });
@@ -273,8 +273,8 @@ describe('classes/api', () => {
       api.build();
       await Api.handleRequest(api, middleware);
       expect(middleware.sendResponse).toBeCalledWith(
-        400,
         { name: 'error' },
+        400,
         'text/plain'
       );
     });
@@ -289,8 +289,8 @@ describe('classes/api', () => {
       api.build();
       await Api.handleRequest(api, middleware);
       expect(middleware.sendResponse).toBeCalledWith(
-        400,
         HttpErrors[400],
+        400,
         'text/plain'
       );
     });
@@ -305,8 +305,8 @@ describe('classes/api', () => {
       api.build();
       await Api.handleRequest(api, middleware);
       expect(middleware.sendResponse).toBeCalledWith(
-        499,
         'Api Error',
+        499,
         'text/plain'
       );
     });
