@@ -244,6 +244,6 @@ describe('services/create-request', () => {
 });
 
 function deleteResponseFunctions(result: any, expectedResult: any) {
-  delete result.sendResponse;
-  delete expectedResult.sendResponse;
+  delete result.send;
+  delete expectedResult.send;
 }

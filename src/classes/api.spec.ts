@@ -181,15 +181,15 @@ describe('classes/api', () => {
 
       await Api.handleRequest(api, middleware);
       expect(middleware.sendResponse).toBeCalledWith(
-        404,
         HttpErrors[404],
+        404,
         'text/plain'
       );
     });
 
     it('Should call the middleware sendResponse function', async () => {
       const func = async (apiRequest: ApiRequest) => {
-        await apiRequest.sendResponse(200, 'test', '');
+        await apiRequest.send('test', 200, '');
       };
       middleware.requestDetail.url = '/';
       middleware.requestDetail.method = 'GET';
@@ -241,8 +241,8 @@ describe('classes/api', () => {
       api.build();
       await Api.handleRequest(api, middleware);
       expect(middleware.sendResponse).toBeCalledWith(
-        500,
         HttpErrors[500],
+        500,
         'text/plain'
       );
     });
@@ -353,8 +353,8 @@ describe('classes/api', () => {
       await Api.handleRequest(api, middleware);
 
       expect(middleware.sendResponse).toBeCalledWith(
-        401,
         HttpErrors[401],
+        401,
         'text/plain'
       );
     });
