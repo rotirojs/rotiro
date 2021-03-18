@@ -16,7 +16,7 @@ export interface ApiRequest {
   headers: Record<string, string>;
   rawBody?: any; // raw body - assume json for now
   rawQuery?: string; // query string after ? e.g. test=case&some=other
-  sendResponse: SendResponse;
+  send: SendResponse;
 }
 
 export interface ApiResponse {
@@ -37,11 +37,8 @@ export interface RouteNamePattern {
   pattern: any;
 }
 
-export type SendResponse = (
-  status: number,
-  body: any,
-  contentType: string
-) => void;
+
+export declare type SendResponse = (body: any, status?: number, contentType?: string) => void;
 
 export type ControlerFunc = (apiRequest: ApiRequest) => void;
 
