@@ -1,3 +1,4 @@
+import { RotiroError } from '../../errors';
 import { createError, ErrorCodes } from '../../errors/error-codes';
 import { RequestDetail } from '../../type-defs';
 import { ExtractedRequestDetail } from '../../type-defs/internal';
@@ -116,7 +117,8 @@ describe('utils/request-params/extract-detail', () => {
     expect(response.body).toEqual({});
   });
 
-  it('Return empty body if POST and no body provided', () => {
+  it('Return empty body if POST and no body provided with json headers', () => {
+    requestDetail.headers = { 'Content-Type': 'application/json' };
     requestDetail.method = 'POST';
     const response: ExtractedRequestDetail = extractRequestDetails(
       requestDetail,
@@ -125,17 +127,37 @@ describe('utils/request-params/extract-detail', () => {
     expect(response.body).toEqual({});
   });
 
-  it('Return all data from a request', () => {
+  it('Return an object if content type is json and body string', () => {
+    requestDetail.headers = { 'Content-Type': 'application/json' };
+    requestDetail.body = JSON.stringify({ name: 'Dan' }) as any;
+    requestDetail.method = 'POST';
     const response: ExtractedRequestDetail = extractRequestDetails(
       requestDetail,
       ''
     );
-    expect(response).toEqual({
-      body: {},
-      method: 'GET',
-      fullPath: '/',
-      headers: {}
-    });
+    expect(response.body).toEqual({ name: 'Dan' });
+  });
+
+  it('throw error content type is json and body invalid', () => {
+    requestDetail.headers = { 'Content-Type': 'application/json' };
+    requestDetail.body = 'asdfasfasf' as any;
+    requestDetail.method = 'POST';
+    let error: any;
+    try {
+      extractRequestDetails(requestDetail, '');
+    } catch (ex) {
+      error = ex;
+    }
+    expect(error.errorCode).toEqual(103);
+  });
+
+  it('Return empty string body if POST and no body provided', () => {
+    requestDetail.method = 'POST';
+    const response: ExtractedRequestDetail = extractRequestDetails(
+      requestDetail,
+      ''
+    );
+    expect(response.body).toEqual('');
   });
 
   it('Return all data from a request', () => {
