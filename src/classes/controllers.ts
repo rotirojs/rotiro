@@ -19,7 +19,7 @@ export class Controllers {
     controller: ControlerFunc
   ) {
     if (this._locked) {
-      throw createError(ErrorCodes.E105);
+      throw createError(ErrorCodes.ApiLocked);
     }
 
     if (!this.controllers[routeName]) {
@@ -56,6 +56,6 @@ export class Controllers {
     if (controllers) {
       return controllers[method];
     }
-    throw createError(ErrorCodes.E107);
+    throw createError(ErrorCodes.RouteNotSupported);
   }
 }

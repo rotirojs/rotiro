@@ -34,7 +34,7 @@ export class Mappers {
 
   public registerMapper(type: string, mapper: DataMapperFunc): void {
     if (this.locked) {
-      throw createError(ErrorCodes.E105);
+      throw createError(ErrorCodes.ApiLocked);
     }
     this._mappers[type] = mapper;
   }

@@ -53,7 +53,7 @@ describe('classes/endpoints', () => {
         error = ex;
       }
 
-      const expectedError = createError(ErrorCodes.E101);
+      const expectedError = createError(ErrorCodes.PathNotFound);
       expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
       expect((error as RotiroError).message).toEqual(expectedError.message);
     });
@@ -86,7 +86,7 @@ describe('classes/endpoints', () => {
         error = ex;
       }
 
-      const expectedError = createError(ErrorCodes.E108);
+      const expectedError = createError(ErrorCodes.InvalidRouteName);
       expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
       expect((error as RotiroError).message).toEqual(expectedError.message);
     });
@@ -104,7 +104,7 @@ describe('classes/endpoints', () => {
         error = ex;
       }
 
-      const expectedError = createError(ErrorCodes.E110);
+      const expectedError = createError(ErrorCodes.InvalidPathParams);
       expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
       expect((error as RotiroError).message).toEqual(expectedError.message);
     });
@@ -119,7 +119,7 @@ describe('classes/endpoints', () => {
         error = ex;
       }
 
-      const expectedError = createError(ErrorCodes.E109);
+      const expectedError = createError(ErrorCodes.RouteNameAlreadyAdded);
       expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
       expect((error as RotiroError).message).toEqual(expectedError.message);
     });
@@ -132,7 +132,7 @@ describe('classes/endpoints', () => {
         error = ex;
       }
 
-      const expectedError = createError(ErrorCodes.E111);
+      const expectedError = createError(ErrorCodes.InvalidPath);
       expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
       expect((error as RotiroError).message).toEqual(expectedError.message);
     });
@@ -147,7 +147,7 @@ describe('classes/endpoints', () => {
         error = ex;
       }
 
-      const expectedError = createError(ErrorCodes.E112);
+      const expectedError = createError(ErrorCodes.PathAlreadyAdded);
       expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
       expect((error as RotiroError).message).toEqual(expectedError.message);
     });
@@ -195,7 +195,7 @@ describe('classes/endpoints', () => {
         error = ex;
       }
 
-      const expectedError = createError(ErrorCodes.E105);
+      const expectedError = createError(ErrorCodes.ApiLocked);
       expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
       expect((error as RotiroError).message).toEqual(expectedError.message);
     });

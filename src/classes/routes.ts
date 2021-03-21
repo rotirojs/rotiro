@@ -28,7 +28,7 @@ export class Routes {
 
   public add(name: string, path: string, config: RouteConfig) {
     if (this.locked) {
-      throw createError(ErrorCodes.E105);
+      throw createError(ErrorCodes.ApiLocked);
     }
 
     const pathParams: PathSchemaParam[] = [];
@@ -50,7 +50,7 @@ export class Routes {
 
     const supportedMethods = Object.keys(config.methods);
     if (!supportedMethods.length) {
-      throw createError(ErrorCodes.E113);
+      throw createError(ErrorCodes.NoMethodsDefined);
     }
 
     for (const method of supportedMethods) {

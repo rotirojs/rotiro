@@ -3,7 +3,7 @@ import { RotiroError } from './rotiro-error';
 
 describe('errors/error-codes', () => {
   it('Create an error', () => {
-    const error: RotiroError = createError(ErrorCodes.E101);
+    const error: RotiroError = createError(ErrorCodes.PathNotFound);
 
     expect(error.errorCode).toEqual(101);
     expect(error.message).toEqual('Path not found');
@@ -12,7 +12,7 @@ describe('errors/error-codes', () => {
 
   it('Create an error with content', () => {
     const errorContent: any = { data: 'error' };
-    const error: RotiroError = createError(ErrorCodes.E101, errorContent);
+    const error: RotiroError = createError(ErrorCodes.PathNotFound, errorContent);
 
     expect(error.content).toEqual(errorContent);
   });

@@ -12,7 +12,7 @@ export function getPathParams(
     // get the names and values from the path
     let params: string[] | null = path.match(endpoint.pattern);
     if (!params) {
-      throw createError(ErrorCodes.E116);
+      throw createError(ErrorCodes.InvalidParameters);
     }
     params = params.slice(1, endpoint.pathParams.length + 1);
     for (let i = 0; i < endpoint.pathParams.length; i++) {

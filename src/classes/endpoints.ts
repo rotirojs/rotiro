@@ -69,7 +69,7 @@ export class Endpoints {
 
   public get(name: string): ApiEndpointSchema {
     if (!this.endpoints[name]) {
-      throw createError(ErrorCodes.E101);
+      throw createError(ErrorCodes.PathNotFound);
     }
     return this.endpoints[name];
   }
@@ -81,16 +81,16 @@ export class Endpoints {
     pathParams: PathSchemaParam[] = []
   ): ApiEndpointSchema {
     if (this.locked) {
-      throw createError(ErrorCodes.E105);
+      throw createError(ErrorCodes.ApiLocked);
     }
 
     const routeName: string = trimString(name);
 
     if (!routeName.length) {
-      throw createError(ErrorCodes.E108);
+      throw createError(ErrorCodes.InvalidRouteName);
     }
     if (this.endpoints[routeName]) {
-      throw createError(ErrorCodes.E109);
+      throw createError(ErrorCodes.RouteNameAlreadyAdded);
     }
 
     const routePath = sanitisePath(path);
@@ -109,14 +109,14 @@ export class Endpoints {
         })
       )
     ) {
-      throw createError(ErrorCodes.E110);
+      throw createError(ErrorCodes.InvalidPathParams);
     }
 
     if (!routePath.length) {
-      throw createError(ErrorCodes.E111);
+      throw createError(ErrorCodes.InvalidPath);
     }
     if (this.paths[routePath]) {
-      throw createError(ErrorCodes.E112);
+      throw createError(ErrorCodes.PathAlreadyAdded);
     }
 
     let endpointMethods: Record<string, MethodSchema>;
