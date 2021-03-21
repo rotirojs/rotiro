@@ -22,7 +22,7 @@ describe('utils/request-params/extract-detail', () => {
     } catch (ex) {
       error = ex;
     }
-    expect(error).toEqual(createError(ErrorCodes.E103));
+    expect(error).toEqual(createError(ErrorCodes.OriginalRequestNotValid));
   });
 
   it('Throws error if no url', () => {
@@ -33,7 +33,7 @@ describe('utils/request-params/extract-detail', () => {
     } catch (ex) {
       error = ex;
     }
-    expect(error).toEqual(createError(ErrorCodes.E103));
+    expect(error).toEqual(createError(ErrorCodes.OriginalRequestNotValid));
   });
 
   it('Return a slash where url is /', () => {

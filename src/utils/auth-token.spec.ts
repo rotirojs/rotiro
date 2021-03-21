@@ -28,7 +28,7 @@ describe('utils/auth-token', () => {
         error = ex;
       }
 
-      const expectedError = createError(ErrorCodes.E115);
+      const expectedError = createError(ErrorCodes.InvalidTokenName);
       expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
       expect((error as RotiroError).message).toEqual(expectedError.message);
     });
@@ -43,7 +43,7 @@ describe('utils/auth-token', () => {
         error = ex;
       }
 
-      const expectedError = createError(ErrorCodes.E114);
+      const expectedError = createError(ErrorCodes.InvalidRequest);
       expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
       expect((error as RotiroError).message).toEqual(expectedError.message);
     });

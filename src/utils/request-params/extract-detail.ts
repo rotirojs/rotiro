@@ -10,7 +10,7 @@ export function extractRequestDetails(
   basePath: string
 ): ExtractedRequestDetail {
   if (!requestDetail.url || !requestDetail.method) {
-    throw createError(ErrorCodes.E103);
+    throw createError(ErrorCodes.OriginalRequestNotValid);
   }
 
   const headers: Record<string, string> = {};
@@ -49,7 +49,7 @@ function formatBody(body: any, contentType: string): any {
         return JSON.parse(body);
       } catch (ex) {
         throw createError(
-          ErrorCodes.E103,
+          ErrorCodes.OriginalRequestNotValid,
           'Body cannot be parsed as valid JSON'
         );
       }

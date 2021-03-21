@@ -53,7 +53,7 @@ export class Api {
     const requestDetail: RequestDetail = middleware.requestDetail;
 
     if (!requestDetail.url || !requestDetail.method) {
-      throw createError(ErrorCodes.E103);
+      throw createError(ErrorCodes.OriginalRequestNotValid);
     }
     const {
       method,
@@ -197,7 +197,7 @@ export class Api {
     );
 
     if (controllerErrors.length) {
-      throw createError(ErrorCodes.E117, controllerErrors);
+      throw createError(ErrorCodes.ControllerMissing, controllerErrors);
     }
 
     const authTokens: string[] = this._endpoints.getAuthTokenNames();
@@ -207,7 +207,7 @@ export class Api {
         authTokens
       );
       if (authenticatorErrors.length) {
-        throw createError(ErrorCodes.E118, authenticatorErrors);
+        throw createError(ErrorCodes.UnassignedAuthToken, authenticatorErrors);
       }
     }
 

@@ -96,7 +96,7 @@ describe('utils/request-params/path-params', () => {
         error = ex;
       }
 
-      const expectedError = createError(ErrorCodes.E116);
+      const expectedError = createError(ErrorCodes.InvalidParameters);
       expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
       expect((error as RotiroError).message).toEqual(expectedError.message);
     });

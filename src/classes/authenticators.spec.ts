@@ -35,7 +35,7 @@ describe('classes/authenticators', () => {
         error = ex;
       }
 
-      const expectedError = createError(ErrorCodes.E105);
+      const expectedError = createError(ErrorCodes.ApiLocked);
       expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
       expect((error as RotiroError).message).toEqual(expectedError.message);
     });
@@ -105,7 +105,7 @@ describe('classes/authenticators', () => {
       } catch (ex) {
         error = ex;
       }
-      expect(error).toEqual(createError(ErrorCodes.E106));
+      expect(error).toEqual(createError(ErrorCodes.TokenNotSupported));
     });
   });
 });

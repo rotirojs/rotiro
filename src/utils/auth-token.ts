@@ -8,13 +8,13 @@ export function getAuthToken(
   query?: Record<string, ApiRequestParam>
 ): string {
   if (!headers) {
-    throw createError(ErrorCodes.E114);
+    throw createError(ErrorCodes.InvalidRequest);
   }
 
   tokenName = trimString(tokenName).toLowerCase();
 
   if (!tokenName) {
-    throw createError(ErrorCodes.E115);
+    throw createError(ErrorCodes.InvalidTokenName);
   }
 
   const authTokenValue: string = headers[tokenName];

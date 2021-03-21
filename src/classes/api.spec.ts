@@ -58,7 +58,7 @@ describe('classes/api', () => {
         error = ex;
       }
 
-      const expectedError = createError(ErrorCodes.E117, ['bob:GET']);
+      const expectedError = createError(ErrorCodes.ControllerMissing, ['bob:GET']);
       expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
       expect((error as RotiroError).message).toEqual(expectedError.message);
       expect((error as RotiroError).content).toEqual(expectedError.content);
@@ -75,7 +75,7 @@ describe('classes/api', () => {
         error = ex;
       }
 
-      const expectedError = createError(ErrorCodes.E118, [
+      const expectedError = createError(ErrorCodes.UnassignedAuthToken, [
         'authToken has no handler registered'
       ]);
       expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
@@ -108,7 +108,7 @@ describe('classes/api', () => {
       } catch (ex) {
         error = ex;
       }
-      expect(error).toEqual(createError(ErrorCodes.E103));
+      expect(error).toEqual(createError(ErrorCodes.OriginalRequestNotValid));
     });
 
     it('Should throw an error if request is missing method', async () => {
@@ -120,7 +120,7 @@ describe('classes/api', () => {
       } catch (ex) {
         error = ex;
       }
-      expect(error).toEqual(createError(ErrorCodes.E103));
+      expect(error).toEqual(createError(ErrorCodes.OriginalRequestNotValid));
     });
 
     it('Should throw an error if request is missing all required params', async () => {
@@ -131,7 +131,7 @@ describe('classes/api', () => {
       } catch (ex) {
         error = ex;
       }
-      expect(error).toEqual(createError(ErrorCodes.E103));
+      expect(error).toEqual(createError(ErrorCodes.OriginalRequestNotValid));
     });
 
     it('Should should handle a get request', async () => {
@@ -234,7 +234,7 @@ describe('classes/api', () => {
     it('Return a 500 error', async () => {
       const func = jest.fn();
       func.mockImplementation(() => {
-        throw createError(ErrorCodes.E103);
+        throw createError(ErrorCodes.OriginalRequestNotValid);
       });
 
       api.controllers.add('ping', 'GET', func);

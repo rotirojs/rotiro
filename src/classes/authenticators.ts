@@ -16,7 +16,7 @@ export class Authenticators {
 
   public add(authTokenName: string, authenticator: AuthenticatorFunc) {
     if (this._locked) {
-      throw createError(ErrorCodes.E105);
+      throw createError(ErrorCodes.ApiLocked);
     }
 
     this.authenticators[authTokenName] = authenticator;
@@ -39,6 +39,6 @@ export class Authenticators {
     if (authenticator) {
       return authenticator;
     }
-    throw createError(ErrorCodes.E106);
+    throw createError(ErrorCodes.TokenNotSupported);
   }
 }
