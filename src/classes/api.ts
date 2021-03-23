@@ -167,7 +167,9 @@ export class Api {
       case 'RotiroErrorResponse':
         // status or 500
         const responseError: RotiroErrorResponse = ex;
-
+        logger.error(
+          `Sending RotiroErrorResponse with status ${responseError.status}`
+        );
         // TODO Set content type correctly
         sendResponse(
           responseError.content ||
@@ -182,14 +184,17 @@ export class Api {
       case 'RotiroError':
         if (ex.errorCode === 101) {
           if (!custom404) {
+            logger.error(`Sending RotiroError with status 404`);
             sendResponse(HttpErrors[404], 404, 'text/plain');
             return;
           } else {
+            logger.error(`Throwing RotiroError as custom404`);
             throw ex;
           }
         }
 
-        sendResponse(HttpErrors[500], 500, 'text/plain');
+        logger.error(`Sending 500 error`);
+        sendResponse(ex.message || HttpErrors[500], 500, 'text/plain');
         return;
     }
   }
