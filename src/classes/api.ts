@@ -182,7 +182,8 @@ export class Api {
 
         return;
       case 'RotiroError':
-        if (ex.errorCode === 101) {
+        logger.error(`Handling error code ${ex.errorCode}`);
+        if (ex.errorCode === ErrorCodes.PathNotFound) {
           if (!custom404) {
             logger.error(`Sending RotiroError with status 404`);
             sendResponse(HttpErrors[404], 404, 'text/plain');
