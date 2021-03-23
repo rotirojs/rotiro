@@ -71,9 +71,9 @@ export class Api {
     );
 
     logger.debug(`Extracted method: ${method}`);
-    logger.debug(`Extracted body: ${body}`);
+    logger.display('Extracted body', body);
     logger.debug(`Extracted fullPath: ${fullPath}`);
-    logger.debug(`Extracted headers: ${headers}`);
+    logger.display('Extracted headers', headers);
 
     let apiRequest: ApiRequest;
     try {
@@ -85,6 +85,8 @@ export class Api {
         body,
         headers
       );
+
+      logger.display('Api Request', apiRequest);
     } catch (ex) {
       logger.error(`Create request error: ${ex}`);
       Api.handleRouteError(
@@ -128,14 +130,13 @@ export class Api {
         status: number,
         contentType: string
       ) => {
-
         const responseDetail: ResponseDetail = getResponseDetail(
           bodyContent,
           status,
           contentType
         );
-
-        logger.debug('Sending the body response back to browser')
+        logger.display('Response Detail', responseDetail);
+        logger.debug('Sending the body response back to browser');
         middleware.sendResponse(
           responseDetail.body,
           responseDetail.statusCode,
@@ -143,10 +144,10 @@ export class Api {
         );
       };
 
-      logger.debug('Calling controller function')
+      logger.debug('Calling controller function');
       await func.call(undefined, apiRequest);
     } catch (ex) {
-      logger.error(`Error occurred calling controller ${ex}`)
+      logger.error(`Error occurred calling controller ${ex}`);
       Api.handleRouteError(
         ex,
         middleware.sendResponse.bind(middleware),
