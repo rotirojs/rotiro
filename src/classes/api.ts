@@ -2,6 +2,7 @@ import { RotiroErrorResponse } from '../errors';
 import { createError, ErrorCodes } from '../errors/error-codes';
 import { HttpErrors } from '../errors/http-error-codes';
 import { createRequest } from '../services/create-request';
+import { logger } from '../services/debugger';
 import { getResponseDetail } from '../services/get-response-detail';
 import {
   ApiOptions,
@@ -52,9 +53,13 @@ export class Api {
   ): Promise<void> {
     const requestDetail: RequestDetail = middleware.requestDetail;
 
+    logger.debug(`url: ${requestDetail.url}`);
+    logger.debug(`method: ${requestDetail.method}`);
     if (!requestDetail.url || !requestDetail.method) {
+      logger.error('Original request not valid');
       throw createError(ErrorCodes.OriginalRequestNotValid);
     }
+
     const {
       method,
       body,
@@ -64,6 +69,11 @@ export class Api {
       requestDetail,
       api.basePath
     );
+
+    logger.debug(`Extracted method: ${method}`);
+    logger.debug(`Extracted body: ${body}`);
+    logger.debug(`Extracted fullPath: ${fullPath}`);
+    logger.debug(`Extracted headers: ${headers}`);
 
     let apiRequest: ApiRequest;
     try {
@@ -76,6 +86,7 @@ export class Api {
         headers
       );
     } catch (ex) {
+      logger.error(`Create request error: ${ex}`);
       Api.handleRouteError(
         ex,
         middleware.sendResponse.bind(middleware),
@@ -85,10 +96,14 @@ export class Api {
     }
 
     if (apiRequest.authTokenName) {
+      logger.debug(
+        `Requesting auth handler based on ${apiRequest.authTokenName}`
+      );
       // call authenticator
       const authenticator: AuthenticatorFunc = api.authenticators.get(
         apiRequest.authTokenName
       );
+      logger.debug(`Requesting auth token value from headers or query`);
       apiRequest.authTokenValue = getAuthToken(
         apiRequest.authTokenName,
         apiRequest.headers,
@@ -97,10 +112,14 @@ export class Api {
       apiRequest.authenticated = await authenticator(apiRequest);
       if (!apiRequest.authenticated) {
         // throw an error
+        logger.error('Authentication failed');
         middleware.sendResponse(HttpErrors[401], 401, 'text/plain');
       }
     }
 
+    logger.debug(
+      `Loading controller based on ${apiRequest.routeName} and ${method}`
+    );
     const func = api.controllers.get(apiRequest.routeName, method);
 
     try {
@@ -109,11 +128,14 @@ export class Api {
         status: number,
         contentType: string
       ) => {
+
         const responseDetail: ResponseDetail = getResponseDetail(
           bodyContent,
           status,
           contentType
         );
+
+        logger.debug('Sending the body response back to browser')
         middleware.sendResponse(
           responseDetail.body,
           responseDetail.statusCode,
@@ -121,8 +143,10 @@ export class Api {
         );
       };
 
+      logger.debug('Calling controller function')
       await func.call(undefined, apiRequest);
     } catch (ex) {
+      logger.error(`Error occurred calling controller ${ex}`)
       Api.handleRouteError(
         ex,
         middleware.sendResponse.bind(middleware),
