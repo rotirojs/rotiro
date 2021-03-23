@@ -5,6 +5,7 @@ export interface ExtractedRequestDetail {
   body: any;
   fullPath: string;
   headers: Record<string, string>;
+  meta: any;
 }
 
 export interface ResponseDetail {

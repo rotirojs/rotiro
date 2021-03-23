@@ -36,7 +36,7 @@ export function extractRequestDetails(
     ? formatBody(requestDetail.body, headers['content-type'])
     : {};
 
-  return { fullPath, method, body, headers };
+  return { fullPath, method, body, headers, meta: requestDetail.meta };
 }
 
 function formatBody(body: any, contentType: string): any {

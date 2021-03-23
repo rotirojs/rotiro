@@ -58,7 +58,9 @@ describe('classes/api', () => {
         error = ex;
       }
 
-      const expectedError = createError(ErrorCodes.ControllerMissing, ['bob:GET']);
+      const expectedError = createError(ErrorCodes.ControllerMissing, [
+        'bob:GET'
+      ]);
       expect((error as RotiroError).errorCode).toEqual(expectedError.errorCode);
       expect((error as RotiroError).message).toEqual(expectedError.message);
       expect((error as RotiroError).content).toEqual(expectedError.content);
@@ -212,6 +214,44 @@ describe('classes/api', () => {
         error = ex;
       }
       expect(error.errorCode).toEqual(101);
+    });
+
+    it('Applies the meta from middleware to api request', async () => {
+      const func = jest.fn();
+      middleware.requestDetail.url = '/ping';
+      middleware.requestDetail.method = 'GET';
+      middleware.requestDetail.meta = { name: 'test' };
+      api.endpoints.add('ping', '/ping', ['GET']);
+      api.controllers.add('ping', 'GET', func);
+      api.build();
+
+      await Api.handleRequest(api, middleware);
+      expect(func.mock.calls[0][0].meta).toEqual({ name: 'test' });
+    });
+
+    it('Create empty meta object on api request if no meta', async () => {
+      const func = jest.fn();
+      middleware.requestDetail.url = '/ping';
+      middleware.requestDetail.method = 'GET';
+      api.endpoints.add('ping', '/ping', ['GET']);
+      api.controllers.add('ping', 'GET', func);
+      api.build();
+
+      await Api.handleRequest(api, middleware);
+      expect(func.mock.calls[0][0].meta).toEqual({});
+    });
+
+    it('Create empty meta object on api request if meta empty', async () => {
+      const func = jest.fn();
+      middleware.requestDetail.url = '/ping';
+      middleware.requestDetail.method = 'GET';
+      middleware.requestDetail.meta = {};
+      api.endpoints.add('ping', '/ping', ['GET']);
+      api.controllers.add('ping', 'GET', func);
+      api.build();
+
+      await Api.handleRequest(api, middleware);
+      expect(func.mock.calls[0][0].meta).toEqual({});
     });
   });
 
