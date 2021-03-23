@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import debug = require('debug');
 const rotiroDebug = debug('rotiro:debug');
 const rotiroError = debug('rotiro:error');

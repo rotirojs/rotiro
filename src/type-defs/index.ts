@@ -124,4 +124,5 @@ export interface RequestDetail {
   url: string;
   body?: object;
   headers: Record<string, string>;
+  meta?: any;
 }

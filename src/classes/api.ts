@@ -2,8 +2,8 @@ import { RotiroErrorResponse } from '../errors';
 import { createError, ErrorCodes } from '../errors/error-codes';
 import { HttpErrors } from '../errors/http-error-codes';
 import { createRequest } from '../services/create-request';
-import { logger } from '../services/debugger';
 import { getResponseDetail } from '../services/get-response-detail';
+import { logger } from '../services/logger';
 import {
   ApiOptions,
   ApiRequest,
@@ -64,7 +64,8 @@ export class Api {
       method,
       body,
       fullPath,
-      headers
+      headers,
+      meta
     }: ExtractedRequestDetail = extractRequestDetails(
       requestDetail,
       api.basePath
@@ -85,7 +86,7 @@ export class Api {
         body,
         headers
       );
-
+      applyMeta(apiRequest, meta);
       logger.display('Api Request', apiRequest);
     } catch (ex) {
       logger.error(`Create request error: ${ex}`);
@@ -182,6 +183,7 @@ export class Api {
         if (ex.errorCode === 101) {
           if (!custom404) {
             sendResponse(HttpErrors[404], 404, 'text/plain');
+            return;
           } else {
             throw ex;
           }
@@ -241,5 +243,16 @@ export class Api {
     this._controllers.lock();
     this._mappers.lock();
     this._locked = true;
+  }
+}
+
+function applyMeta(apiRequest: ApiRequest, meta: any): void {
+  if (meta && typeof meta === 'object') {
+    const keys: string[] = Object.keys(meta);
+    if (keys.length) {
+      for (const key of keys) {
+        apiRequest.meta[key] = meta[key];
+      }
+    }
   }
 }
