@@ -1,39 +1,48 @@
 import { RotiroError } from './rotiro-error';
 
 export enum ErrorCodes {
-  PathNotFound,
-  ApiNotBuild,
-  OriginalRequestNotValid,
-  ControllerError,
-  ApiLocked,
-  TokenNotSupported,
-  RouteNotSupported,
-  InvalidRouteName,
-  RouteNameAlreadyAdded,
-  InvalidPathParams,
-  InvalidPath,
-  PathAlreadyAdded,
-  NoMethodsDefined,
-  InvalidRequest,
-  InvalidTokenName,
-  InvalidParameters,
-  ControllerMissing,
-  UnassignedAuthToken
+  PathNotFound = 101,
+  ApiNotBuild = 102,
+  OriginalRequestNotValid = 103,
+  ControllerError = 104,
+  ApiLocked = 105,
+  TokenNotSupported = 106,
+  RouteNotSupported = 107,
+  InvalidRouteName = 108,
+  RouteNameAlreadyAdded = 109,
+  InvalidPathParams = 110,
+  InvalidPath = 111,
+  PathAlreadyAdded = 112,
+  NoMethodsDefined = 113,
+  InvalidRequest = 114,
+  InvalidTokenName = 115,
+  InvalidParameters = 116,
+  ControllerMissing = 117,
+  UnassignedAuthToken = 118
 }
 
 const ErrorMessages = {
   [ErrorCodes.PathNotFound]: { code: 101, message: 'Path not found' },
   [ErrorCodes.ApiNotBuild]: { code: 102, message: 'Api not built' },
-  [ErrorCodes.OriginalRequestNotValid]: { code: 103, message: 'Original request not valid' },
+  [ErrorCodes.OriginalRequestNotValid]: {
+    code: 103,
+    message: 'Original request not valid'
+  },
   [ErrorCodes.ControllerError]: { code: 104, message: 'Controller Error' },
   [ErrorCodes.ApiLocked]: {
     code: 105,
     message: 'Api is locked and cannot be updated'
   },
-  [ErrorCodes.TokenNotSupported]: { code: 106, message: 'Auth token not supported' },
+  [ErrorCodes.TokenNotSupported]: {
+    code: 106,
+    message: 'Auth token not supported'
+  },
   [ErrorCodes.RouteNotSupported]: { code: 107, message: 'Route not supported' },
   [ErrorCodes.InvalidRouteName]: { code: 108, message: 'Invalid route name' },
-  [ErrorCodes.RouteNameAlreadyAdded]: { code: 109, message: 'Route name already added' },
+  [ErrorCodes.RouteNameAlreadyAdded]: {
+    code: 109,
+    message: 'Route name already added'
+  },
   [ErrorCodes.InvalidPathParams]: {
     code: 110,
     message: 'Path parameters do not match schema'
