@@ -1,11 +1,11 @@
-import { createError, ErrorCodes } from './error-codes';
+import {createError, ErrorCodes, RotiroErrorCode} from './error-codes';
 import { RotiroError } from './rotiro-error';
 
 describe('errors/error-codes', () => {
   it('Create an error', () => {
     const error: RotiroError = createError(ErrorCodes.PathNotFound);
 
-    expect(error.errorCode).toEqual(101);
+    expect(error.errorCode).toEqual(RotiroErrorCode.PathNotFound.toString());
     expect(error.message).toEqual('Path not found');
     expect(error.content).toEqual(undefined);
   });

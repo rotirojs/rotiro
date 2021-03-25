@@ -1,5 +1,5 @@
 import { RotiroErrorResponse } from '../errors';
-import { createError, ErrorCodes } from '../errors/error-codes';
+import {createError, ErrorCodes, RotiroErrorCode} from '../errors/error-codes';
 import { HttpErrors } from '../errors/http-error-codes';
 import { createRequest } from '../services/create-request';
 import { getResponseDetail } from '../services/get-response-detail';
@@ -183,7 +183,7 @@ export class Api {
         return;
       case 'RotiroError':
         logger.error(`Handling error code ${ex.errorCode}`);
-        if (ex.errorCode === ErrorCodes.PathNotFound) {
+        if (ex.errorCode === RotiroErrorCode.PathNotFound.toString()) {
           if (!custom404) {
             logger.error(`Sending RotiroError with status 404`);
             sendResponse(HttpErrors[404], 404, 'text/plain');

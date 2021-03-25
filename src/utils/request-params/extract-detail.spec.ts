@@ -1,5 +1,9 @@
 import { RotiroError } from '../../errors';
-import { createError, ErrorCodes } from '../../errors/error-codes';
+import {
+  createError,
+  ErrorCodes,
+  RotiroErrorCode
+} from '../../errors/error-codes';
 import { RequestDetail } from '../../type-defs';
 import { ExtractedRequestDetail } from '../../type-defs/internal';
 import { extractRequestDetails } from './extract-detail';
@@ -148,7 +152,7 @@ describe('utils/request-params/extract-detail', () => {
     } catch (ex) {
       error = ex;
     }
-    expect(error.errorCode).toEqual(103);
+    expect(error.errorCode).toEqual(RotiroErrorCode.OriginalRequestNotValid.toString());
   });
 
   it('Return empty string body if POST and no body provided', () => {
