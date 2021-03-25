@@ -117,11 +117,11 @@ const ErrorMessages = {
   }
 };
 
-export function createError(errorCode: ErrorCodes, content?: any): RotiroError {
+export function createError(errorCode: number, content?: any): RotiroError {
   const errorInfo: any = ErrorMessages[errorCode] || {
     code: errorCode,
     message: ''
   };
 
-  return new RotiroError(errorInfo.message, content, errorInfo.code);
+  return new RotiroError(errorInfo.message, content, errorInfo.code.toString());
 }

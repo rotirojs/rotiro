@@ -4,6 +4,10 @@ export class RotiroError extends Error {
 
   constructor(message: string, content?: any, errorCode?: string) {
     super(message);
+    if (errorCode && typeof (errorCode as any) !== 'string') {
+      errorCode = errorCode.toString();
+    }
+
     this.content = content;
     this.errorCode = errorCode;
   }

@@ -1,5 +1,5 @@
 import { RotiroError, RotiroErrorResponse } from '../errors';
-import { createError, ErrorCodes } from '../errors/error-codes';
+import {createError, ErrorCodes, RotiroErrorCode} from '../errors/error-codes';
 import { HttpErrors } from '../errors/http-error-codes';
 import { ApiRequest, AuthenticatorFunc, RotiroMiddleware } from '../type-defs';
 import { Api } from './api';
@@ -213,7 +213,7 @@ describe('classes/api', () => {
       } catch (ex) {
         error = ex;
       }
-      expect(error.errorCode).toEqual(101);
+      expect(error.errorCode).toEqual(RotiroErrorCode.PathNotFound.toString());
     });
 
     it('Applies the meta from middleware to api request', async () => {
