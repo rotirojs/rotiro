@@ -281,6 +281,22 @@ describe('classes/api', () => {
       api.build();
       await Api.handleRequest(api, middleware);
       expect(middleware.sendResponse).toBeCalledWith(
+        'Original request not valid',
+        500,
+        'text/plain'
+      );
+    });
+
+    it('Return a 500 error with generic answer', async () => {
+      const func = jest.fn();
+      func.mockImplementation(() => {
+        throw createError(73);
+      });
+
+      api.controllers.add('ping', 'GET', func);
+      api.build();
+      await Api.handleRequest(api, middleware);
+      expect(middleware.sendResponse).toBeCalledWith(
         HttpErrors[500],
         500,
         'text/plain'
