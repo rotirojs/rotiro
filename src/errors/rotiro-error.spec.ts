@@ -23,4 +23,11 @@ describe('errors/rotiro-error', () => {
 
     expect(error.errorCode).toEqual(errorCode);
   });
+
+  it('Creates an Error with a numeric code', () => {
+    const message = 'An Error';
+    const error: any = new RotiroError(message, undefined, 42 as any);
+
+    expect(error.errorCode).toEqual('42');
+  });
 });
