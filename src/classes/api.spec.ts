@@ -1,5 +1,9 @@
 import { RotiroError, RotiroErrorResponse } from '../errors';
-import {createError, ErrorCodes, RotiroErrorCode} from '../errors/error-codes';
+import {
+  createError,
+  ErrorCodes,
+  RotiroErrorCode
+} from '../errors/error-codes';
 import { HttpErrors } from '../errors/http-error-codes';
 import { ApiRequest, AuthenticatorFunc, RotiroMiddleware } from '../type-defs';
 import { Api } from './api';
@@ -200,6 +204,24 @@ describe('classes/api', () => {
       api.build();
       await Api.handleRequest(api, middleware);
       expect(middleware.sendResponse).toBeCalled();
+    });
+
+    it('Should call the middleware sendResponse function with custom headers', async () => {
+      const func = async (apiRequest: ApiRequest) => {
+        await apiRequest.send('test', 200, '', { contentLength: '0' });
+      };
+      middleware.requestDetail.url = '/';
+      middleware.requestDetail.method = 'GET';
+      api.endpoints.add('home', '/', ['GET']);
+      api.controllers.add('home', 'GET', func);
+      api.build();
+      await Api.handleRequest(api, middleware);
+      expect(middleware.sendResponse).toBeCalledWith(
+        'test',
+        200,
+        'text/plain',
+        { contentlength: '0' }
+      );
     });
 
     it('Should should error if customError and path not found', async () => {

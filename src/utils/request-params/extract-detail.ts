@@ -13,13 +13,8 @@ export function extractRequestDetails(
     throw createError(ErrorCodes.OriginalRequestNotValid);
   }
 
-  const headers: Record<string, string> = {};
+  const headers: Record<string, string> = cleanHeaders(requestDetail.headers);
 
-  if (requestDetail.headers) {
-    for (const headerKey of Object.keys(requestDetail.headers)) {
-      headers[headerKey.toLowerCase()] = requestDetail.headers[headerKey];
-    }
-  }
   let fullPath = cleanBasePath(requestDetail.url);
 
   // remove the base path from the original url
@@ -37,6 +32,19 @@ export function extractRequestDetails(
     : {};
 
   return { fullPath, method, body, headers, meta: requestDetail.meta };
+}
+
+export function cleanHeaders(
+  headers?: Record<string, string>
+): Record<string, string> {
+  const cleanHeaders: Record<string, string> = {};
+
+  if (headers) {
+    for (const headerKey of Object.keys(headers)) {
+      cleanHeaders[headerKey.toLowerCase()] = headers[headerKey];
+    }
+  }
+  return cleanHeaders;
 }
 
 function formatBody(body: any, contentType: string): any {

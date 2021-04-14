@@ -12,4 +12,5 @@ export interface ResponseDetail {
   body: string;
   statusCode: number;
   contentType: string;
+  headers: Record<string, string>;
 }

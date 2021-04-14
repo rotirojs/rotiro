@@ -1,4 +1,4 @@
-import {createError, ErrorCodes, RotiroErrorCode} from './error-codes';
+import { createError, ErrorCodes, RotiroErrorCode } from './error-codes';
 import { RotiroError } from './rotiro-error';
 
 describe('errors/error-codes', () => {
@@ -12,7 +12,10 @@ describe('errors/error-codes', () => {
 
   it('Create an error with content', () => {
     const errorContent: any = { data: 'error' };
-    const error: RotiroError = createError(ErrorCodes.PathNotFound, errorContent);
+    const error: RotiroError = createError(
+      ErrorCodes.PathNotFound,
+      errorContent
+    );
 
     expect(error.content).toEqual(errorContent);
   });

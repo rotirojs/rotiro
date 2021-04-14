@@ -84,5 +84,26 @@ describe('services/send-response', () => {
       expect(response.contentType).toEqual('text/plain');
       expect(response.body).toEqual('Error parsing object');
     });
+
+    it('Should update missing content type with header', () => {
+      const content: any = { name: 'bob' };
+      const response: ResponseDetail = getResponseDetail(content, 200, '', {
+        contentType: 'some/media'
+      });
+
+      expect(response.contentType).toEqual('some/media');
+    });
+
+    it('Should not update existing content type with header', () => {
+      const content: any = { name: 'bob' };
+      const response: ResponseDetail = getResponseDetail(
+        content,
+        200,
+        'selected/media',
+        { contentType: 'some/media' }
+      );
+
+      expect(response.contentType).toEqual('selected/media');
+    });
   });
 });

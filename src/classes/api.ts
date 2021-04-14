@@ -1,5 +1,9 @@
 import { RotiroErrorResponse } from '../errors';
-import {createError, ErrorCodes, RotiroErrorCode} from '../errors/error-codes';
+import {
+  createError,
+  ErrorCodes,
+  RotiroErrorCode
+} from '../errors/error-codes';
 import { HttpErrors } from '../errors/http-error-codes';
 import { createRequest } from '../services/create-request';
 import { getResponseDetail } from '../services/get-response-detail';
@@ -129,19 +133,22 @@ export class Api {
       apiRequest.send = (
         bodyContent: any,
         status: number,
-        contentType: string
+        contentType: string,
+        headers: Record<string, string>
       ) => {
         const responseDetail: ResponseDetail = getResponseDetail(
           bodyContent,
           status,
-          contentType
+          contentType,
+          headers
         );
         logger.display('Response Detail', responseDetail);
         logger.debug('Sending the body response back to browser');
         middleware.sendResponse(
           responseDetail.body,
           responseDetail.statusCode,
-          responseDetail.contentType
+          responseDetail.contentType,
+          responseDetail.headers
         );
       };
 
