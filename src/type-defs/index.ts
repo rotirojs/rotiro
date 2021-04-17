@@ -17,6 +17,7 @@ export interface ApiRequest {
   rawBody?: any; // raw body - assume json for now
   rawQuery?: string; // query string after ? e.g. test=case&some=other
   send: SendResponse;
+  originalRequest?: any; // optional request object passed in e.g. express request/claudiajs request - This should only be used as a reference and not assumed to be present
 }
 
 export interface ApiResponse {
@@ -96,6 +97,7 @@ export interface RouteMethod {
   query?: Record<string, RouteParameter>;
   controller: ControlerFunc;
   meta?: RouteMeta;
+  strict?: boolean; // only load query parameters that are defined in schema
 }
 
 export interface RouteParameter {
@@ -126,4 +128,5 @@ export interface RequestDetail {
   body?: object;
   headers: Record<string, string>;
   meta?: any;
+  originalRequest?: any;
 }

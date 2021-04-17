@@ -68,8 +68,9 @@ export class Api {
       method,
       body,
       fullPath,
-      headers,
-      meta
+      headers ,
+      meta,
+      originalRequest
     }: ExtractedRequestDetail = extractRequestDetails(
       requestDetail,
       api.basePath
@@ -90,6 +91,7 @@ export class Api {
         body,
         headers
       );
+      apiRequest.originalRequest = originalRequest;
       applyMeta(apiRequest, meta);
       logger.display('Api Request', apiRequest);
     } catch (ex) {
@@ -134,13 +136,13 @@ export class Api {
         bodyContent: any,
         status: number,
         contentType: string,
-        headers: Record<string, string>
+        cleanHeaders: Record<string, string>
       ) => {
         const responseDetail: ResponseDetail = getResponseDetail(
           bodyContent,
           status,
           contentType,
-          headers
+          cleanHeaders
         );
         logger.display('Response Detail', responseDetail);
         logger.debug('Sending the body response back to browser');

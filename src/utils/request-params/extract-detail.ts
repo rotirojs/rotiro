@@ -31,20 +31,27 @@ export function extractRequestDetails(
     ? formatBody(requestDetail.body, headers['content-type'])
     : {};
 
-  return { fullPath, method, body, headers, meta: requestDetail.meta };
+  return {
+    fullPath,
+    method,
+    body,
+    headers,
+    meta: requestDetail.meta,
+    originalRequest: requestDetail.originalRequest
+  };
 }
 
 export function cleanHeaders(
   headers?: Record<string, string>
 ): Record<string, string> {
-  const cleanHeaders: Record<string, string> = {};
+  const cleanedHeaders: Record<string, string> = {};
 
   if (headers) {
     for (const headerKey of Object.keys(headers)) {
-      cleanHeaders[headerKey.toLowerCase()] = headers[headerKey];
+      cleanedHeaders[headerKey.toLowerCase()] = headers[headerKey];
     }
   }
-  return cleanHeaders;
+  return cleanedHeaders;
 }
 
 function formatBody(body: any, contentType: string): any {
