@@ -6,7 +6,8 @@ import { getQueryAsObject } from '../paths';
 export function getQueryParams(
   query: string,
   querySchema: MethodSchemaParam[],
-  mappers: Mappers
+  mappers: Mappers,
+  strict: boolean = false
 ): Record<string, ApiRequestParam> {
   const queryParams: Record<string, ApiRequestParam> = {};
   // only process if some params are declared
@@ -40,6 +41,19 @@ export function getQueryParams(
         valid,
         type: schemaItem.type
       };
+    }
+    if (!strict) {
+      // add any extra query params that are not included in the schema
+      for (const queryKey of Object.keys(queryData)) {
+        if (!queryParams[queryKey]) {
+          queryParams[queryKey] = {
+            name: queryKey,
+            value: queryData[queryKey],
+            valid: true,
+            type: 'string'
+          };
+        }
+      }
     }
   }
   return queryParams;

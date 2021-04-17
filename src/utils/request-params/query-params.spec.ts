@@ -72,7 +72,7 @@ describe('utils/request-params/query-params', () => {
       });
     });
 
-    it('Should ignore additional parameter in the query', () => {
+    it('Should ignore additional parameter in the query if strict mode', () => {
       const querySchema: MethodSchemaParam[] = [
         { name: 'id', type: 'number' },
         { name: 'color', type: 'string' }
@@ -80,7 +80,8 @@ describe('utils/request-params/query-params', () => {
       const result: Record<string, ApiRequestParam> = getQueryParams(
         '?id=23&color=blue&extra=true',
         querySchema,
-        mappers
+        mappers,
+        true
       );
       expect(result).toEqual({
         id: {
@@ -140,6 +141,12 @@ describe('utils/request-params/query-params', () => {
           type: 'string',
           valid: false,
           value: undefined
+        },
+        id1: {
+          name: 'id1',
+          type: 'string',
+          valid: true,
+          value: 'bob'
         }
       });
     });
@@ -147,7 +154,7 @@ describe('utils/request-params/query-params', () => {
     it('Should not error if optional parameter missing', () => {
       const querySchema = [{ type: 'string', name: 'id', optional: true }];
       const query = 'id1=bob';
-      const result = getQueryParams(query, querySchema, mappers);
+      const result = getQueryParams(query, querySchema, mappers, true);
       expect(result).toEqual({
         id: {
           name: 'id',
@@ -163,7 +170,7 @@ describe('utils/request-params/query-params', () => {
         { type: 'string', name: 'id', optional: true, array: true }
       ];
       const query = 'id1=bob';
-      const result = getQueryParams(query, querySchema, mappers);
+      const result = getQueryParams(query, querySchema, mappers, true);
       expect(result).toEqual({
         id: {
           name: 'id',
@@ -182,6 +189,26 @@ describe('utils/request-params/query-params', () => {
         mappers
       );
       expect(result).toEqual({});
+    });
+
+    it('Should include all params if not strict mode', () => {
+      const querySchema = [{ type: 'string', name: 'id' }];
+      const query = 'id1=bob&id=terry';
+      const result = getQueryParams(query, querySchema, mappers);
+      expect(result).toEqual({
+        id: {
+          name: 'id',
+          type: 'string',
+          valid: true,
+          value: 'terry'
+        },
+        id1: {
+          name: 'id1',
+          type: 'string',
+          valid: true,
+          value: 'bob'
+        }
+      });
     });
   });
 });
