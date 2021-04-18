@@ -181,18 +181,39 @@ describe('utils/request-params/query-params', () => {
       });
     });
 
-    it('Should return empty object if no query params defined', () => {
+    it('Should return empty object if no query params defined in strict mode', () => {
       const querySchema: MethodSchemaParam[] = [];
       const result: Record<string, ApiRequestParam> = getQueryParams(
         '?id=frank',
         querySchema,
-        mappers
+        mappers,
+        true
       );
       expect(result).toEqual({});
     });
 
     it('Should include all params if not strict mode', () => {
       const querySchema = [{ type: 'string', name: 'id' }];
+      const query = 'id1=bob&id=terry';
+      const result = getQueryParams(query, querySchema, mappers);
+      expect(result).toEqual({
+        id: {
+          name: 'id',
+          type: 'string',
+          valid: true,
+          value: 'terry'
+        },
+        id1: {
+          name: 'id1',
+          type: 'string',
+          valid: true,
+          value: 'bob'
+        }
+      });
+    });
+
+    it('Should include all params if no schema when not strict mode', () => {
+      const querySchema = [];
       const query = 'id1=bob&id=terry';
       const result = getQueryParams(query, querySchema, mappers);
       expect(result).toEqual({

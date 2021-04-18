@@ -11,7 +11,9 @@ export function getQueryParams(
 ): Record<string, ApiRequestParam> {
   const queryParams: Record<string, ApiRequestParam> = {};
   // only process if some params are declared
-  if (querySchema.length) {
+  // If strict mode then only process the query params that match the schema
+  // otherwise include all the query parameters
+  if (querySchema.length || !strict) {
     // split the query params into an object
     const queryData: Record<string, string> = getQueryAsObject(query);
 
@@ -42,6 +44,7 @@ export function getQueryParams(
         type: schemaItem.type
       };
     }
+
     if (!strict) {
       // add any extra query params that are not included in the schema
       for (const queryKey of Object.keys(queryData)) {
