@@ -196,5 +196,22 @@ describe('classes/routes', () => {
         }
       ]);
     });
+
+    it('will assign an query to a method in strict mode', () => {
+      const routeConfig: RouteConfig = {
+        path: { id: 'string' },
+        methods: {
+          PATCH: {
+            controller: jest.fn(),
+            query: { bob: { type: 'string' } },
+            strict: true
+          }
+        }
+      };
+      api.routes.add('ping', '/ping/:id', routeConfig);
+      api.build();
+      const endpoint: any = api.endpoints.get('ping');
+      expect(endpoint.methods.PATCH.strict).toEqual(true);
+    });
   });
 });

@@ -112,6 +112,29 @@ describe('services/create-request', () => {
         deleteResponseFunctions(result, GETResponse);
         expect(result).toEqual(GETResponse);
       });
+
+
+      it('Gets query without schema defined in none strict mode', () => {
+        endPoints.add(
+          'user',
+          '/users/:id',
+          ['GET'],
+          [{ name: 'id', type: 'number' }]
+        );
+        const pathName = '/users/234?version=4332';
+        GETResponse.rawQuery = 'version=4332';
+        GETResponse.query = {
+          version: {
+            name: 'version',
+            type: 'string', // not defined so assumes string
+            valid: true,
+            value: "4332"
+          }
+        };
+        const result = createRequest(pathName, METHOD, endPoints, mappers);
+        deleteResponseFunctions(result, GETResponse);
+        expect(result).toEqual(GETResponse);
+      });
     });
 
     describe('POST requests', () => {

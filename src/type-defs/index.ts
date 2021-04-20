@@ -61,6 +61,7 @@ export interface MethodSchema {
   auth?: string;
   bodyParams?: MethodSchemaParam[];
   queryParams?: MethodSchemaParam[];
+  strict?: boolean;
 }
 
 export interface PathSchemaParam {
