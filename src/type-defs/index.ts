@@ -1,3 +1,5 @@
+import { ResponseDetail } from './internal';
+
 export type RestMethods = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
 
 export interface ApiRequest {
@@ -18,12 +20,6 @@ export interface ApiRequest {
   rawQuery?: string; // query string after ? e.g. test=case&some=other
   send: SendResponse;
   originalRequest?: any; // optional request object passed in e.g. express request/claudiajs request - This should only be used as a reference and not assumed to be present
-}
-
-export interface ApiResponse {
-  sendError: (status: number, message: string, data: any) => void;
-  sendJSON: (payload: object, status?: number) => void;
-  response: any;
 }
 
 export interface ApiRequestParam {
@@ -131,3 +127,8 @@ export interface RequestDetail {
   meta?: any;
   originalRequest?: any;
 }
+
+export type RotiroMiddlewareFunc = (
+  apiRequest: ApiRequest,
+  responseDetail: ResponseDetail
+) => void;

@@ -5,12 +5,20 @@ import {
   RotiroErrorCode
 } from '../errors/error-codes';
 import { HttpErrors } from '../errors/http-error-codes';
-import { ApiRequest, AuthenticatorFunc, RotiroMiddleware } from '../type-defs';
+import * as Logger from '../services/logger';
+import {
+  ApiRequest,
+  AuthenticatorFunc,
+  RotiroMiddleware,
+  RotiroMiddlewareFunc
+} from '../type-defs';
+import { ResponseDetail } from '../type-defs/internal';
 import { Api } from './api';
 import { Controllers } from './controllers';
 import { Endpoints } from './endpoints';
 import { Mappers } from './mappers';
 import { Routes } from './routes';
+jest.mock('../services/logger');
 
 describe('classes/api', () => {
   describe('create', () => {
@@ -434,6 +442,87 @@ describe('classes/api', () => {
         HttpErrors[401],
         401,
         'text/plain'
+      );
+    });
+  });
+
+  describe('Middlewares', () => {
+    let middleware: RotiroMiddleware;
+    let api: Api;
+    beforeEach(() => {
+      Logger.logger.error = jest.fn();
+      api = new Api();
+      middleware = {
+        sendResponse: jest.fn(),
+        requestDetail: {
+          url: '/ping',
+          method: 'GET',
+          headers: {}
+        }
+      };
+    });
+
+    it('Logs error if invalid middleware', async () => {
+      const func = async (apiRequest: ApiRequest) => {
+        await apiRequest.send('test', 200, '', { contentLength: '0' });
+      };
+      api.endpoints.add('ping', '/ping', ['GET']);
+      api.controllers.add('ping', 'GET', func);
+      api.use(undefined as any);
+      api.build();
+
+      await Api.handleRequest(api, middleware);
+      expect(Logger.logger.error).toBeCalledWith(
+        `Error calling middleware: Cannot read property 'call' of undefined`
+      );
+    });
+
+    it('Updates meta based on middleware', async () => {
+      const middlewareFunc: RotiroMiddlewareFunc = (
+        apiRequest: ApiRequest,
+        responseDetail: ResponseDetail
+      ) => {
+        if (!apiRequest.meta) {
+          apiRequest.meta = {};
+        }
+        apiRequest.meta.something = true;
+      };
+      let meta: any;
+      const func = async (apiRequest: ApiRequest) => {
+        await apiRequest.send('test', 200, '', { contentLength: '0' });
+        meta = apiRequest.meta;
+      };
+      api.endpoints.add('ping', '/ping', ['GET']);
+      api.controllers.add('ping', 'GET', func);
+      api.use(middlewareFunc);
+      api.build();
+
+      await Api.handleRequest(api, middleware);
+      expect(meta.something).toEqual(true);
+    });
+
+    it('Updates response header with middleware', async () => {
+      const middlewareFunc: RotiroMiddlewareFunc = (
+        apiRequest: ApiRequest,
+        responseDetail: ResponseDetail
+      ) => {
+        responseDetail.headers.somethingNew = 'hello';
+        responseDetail.contentType = 'something/different';
+      };
+      const func = async (apiRequest: ApiRequest) => {
+        await apiRequest.send('test', 200, '', { contentLength: '0' });
+      };
+      api.endpoints.add('ping', '/ping', ['GET']);
+      api.controllers.add('ping', 'GET', func);
+      api.use(middlewareFunc);
+      api.build();
+
+      await Api.handleRequest(api, middleware);
+      expect(middleware.sendResponse).toBeCalledWith(
+        'test',
+        200,
+        'something/different',
+        { contentlength: '0', somethingNew: 'hello' }
       );
     });
   });
