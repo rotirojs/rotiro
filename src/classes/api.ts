@@ -14,6 +14,7 @@ import {
   AuthenticatorFunc,
   RequestDetail,
   RotiroMiddleware,
+  RotiroMiddlewareFunc,
   SendResponse
 } from '../type-defs';
 import { ExtractedRequestDetail, ResponseDetail } from '../type-defs/internal';
@@ -27,6 +28,7 @@ import { Mappers } from './mappers';
 import { Routes } from './routes';
 
 export class Api {
+
   public get controllers(): Controllers {
     return this._controllers;
   }
@@ -68,7 +70,7 @@ export class Api {
       method,
       body,
       fullPath,
-      headers ,
+      headers,
       meta,
       originalRequest
     }: ExtractedRequestDetail = extractRequestDetails(
@@ -144,6 +146,10 @@ export class Api {
           contentType,
           cleanHeaders
         );
+
+        // apply any middlewares
+        api.applyMiddlewares(apiRequest, responseDetail);
+
         logger.display('Response Detail', responseDetail);
         logger.debug('Sending the body response back to browser');
         middleware.sendResponse(
@@ -208,6 +214,7 @@ export class Api {
         return;
     }
   }
+  private middlewares: RotiroMiddlewareFunc[] = [];
   private readonly _routes: Routes;
   private readonly _authenticators: Authenticators;
   private readonly _endpoints: Endpoints;
@@ -227,6 +234,10 @@ export class Api {
     this._controllers = new Controllers();
     this._mappers = new Mappers();
     this._routes = new Routes(this.endpoints, this.controllers);
+  }
+
+  public use(fn: RotiroMiddlewareFunc) {
+    this.middlewares.push(fn);
   }
 
   public build(): void {
@@ -258,6 +269,21 @@ export class Api {
     this._controllers.lock();
     this._mappers.lock();
     this._locked = true;
+  }
+
+  private applyMiddlewares(
+    apiRequest: ApiRequest,
+    responseDetail: ResponseDetail
+  ) {
+    if (this.middlewares.length) {
+      for (const middleware of this.middlewares) {
+        try {
+          middleware.call(this, apiRequest, responseDetail);
+        } catch (ex) {
+          logger.error(`Error calling middleware: ${ex.message}`);
+        }
+      }
+    }
   }
 }
 
