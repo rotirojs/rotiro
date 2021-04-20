@@ -67,6 +67,11 @@ export class Routes {
       if (routeMethod.query) {
         methodConfig.queryParams = assignBodyParam(routeMethod.query);
       }
+
+      if (routeMethod.strict) {
+        methodConfig.strict = routeMethod.strict;
+      }
+
       methods[method] = methodConfig;
       this.controllers.add(name, method as RestMethods, routeMethod.controller);
     }

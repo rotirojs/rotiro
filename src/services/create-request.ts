@@ -5,6 +5,7 @@ import {
   ApiRequest,
   ApiRequestParam,
   MethodSchema,
+  MethodSchemaParam,
   RestMethods,
   RouteNamePattern,
   SendResponse
@@ -35,9 +36,13 @@ export function createRequest(
   const body = methodSchema.bodyParams
     ? getBodyParams(rawBody, methodSchema.bodyParams, mappers)
     : {};
-  const query = methodSchema.queryParams
-    ? getQueryParams(rawQuery, methodSchema.queryParams, mappers)
-    : {};
+
+  const query = getQueryParams(
+    rawQuery,
+    methodSchema.queryParams || [],
+    mappers,
+    methodSchema.strict
+  );
   const pathParams = getPathParams(pathName, endpoint, mappers);
 
   const apiRequest: ApiRequest = {
