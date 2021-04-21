@@ -11,13 +11,14 @@ import { logger } from '../services/logger';
 import {
   ApiOptions,
   ApiRequest,
+  ApiResponse,
   AuthenticatorFunc,
   RequestDetail,
   RotiroMiddleware,
   RotiroMiddlewareFunc,
   SendResponse
 } from '../type-defs';
-import { ExtractedRequestDetail, ResponseDetail } from '../type-defs/internal';
+import { ExtractedRequestDetail } from '../type-defs/internal';
 import { cleanBasePath } from '../utils';
 import { getAuthToken } from '../utils/auth-token';
 import { extractRequestDetails } from '../utils/request-params/extract-detail';
@@ -28,7 +29,6 @@ import { Mappers } from './mappers';
 import { Routes } from './routes';
 
 export class Api {
-
   public get controllers(): Controllers {
     return this._controllers;
   }
@@ -140,14 +140,14 @@ export class Api {
         contentType: string,
         cleanHeaders: Record<string, string>
       ) => {
-        const responseDetail: ResponseDetail = getResponseDetail(
+        const responseDetail: ApiResponse = getResponseDetail(
           bodyContent,
           status,
           contentType,
           cleanHeaders
         );
 
-        // apply any middlewares
+        // apply any middlewares before response
         api.applyMiddlewares(apiRequest, responseDetail);
 
         logger.display('Response Detail', responseDetail);
@@ -159,6 +159,10 @@ export class Api {
           responseDetail.headers
         );
       };
+
+      // Apply the middleware before controller function is called to allow the request to
+      // be updated with things like cookies etc
+      api.applyMiddlewares(apiRequest);
 
       logger.debug('Calling controller function');
       await func.call(undefined, apiRequest);
@@ -273,7 +277,7 @@ export class Api {
 
   private applyMiddlewares(
     apiRequest: ApiRequest,
-    responseDetail: ResponseDetail
+    responseDetail?: ApiResponse
   ) {
     if (this.middlewares.length) {
       for (const middleware of this.middlewares) {

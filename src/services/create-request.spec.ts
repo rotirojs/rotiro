@@ -113,7 +113,6 @@ describe('services/create-request', () => {
         expect(result).toEqual(GETResponse);
       });
 
-
       it('Gets query without schema defined in none strict mode', () => {
         endPoints.add(
           'user',
@@ -128,7 +127,7 @@ describe('services/create-request', () => {
             name: 'version',
             type: 'string', // not defined so assumes string
             valid: true,
-            value: "4332"
+            value: '4332'
           }
         };
         const result = createRequest(pathName, METHOD, endPoints, mappers);

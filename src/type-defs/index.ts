@@ -1,5 +1,3 @@
-import { ResponseDetail } from './internal';
-
 export type RestMethods = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
 
 export interface ApiRequest {
@@ -130,5 +128,12 @@ export interface RequestDetail {
 
 export type RotiroMiddlewareFunc = (
   apiRequest: ApiRequest,
-  responseDetail: ResponseDetail
+  apiResponse?: ApiResponse
 ) => void;
+
+export interface ApiResponse {
+  body: string;
+  statusCode: number;
+  contentType: string;
+  headers: Record<string, string>;
+}

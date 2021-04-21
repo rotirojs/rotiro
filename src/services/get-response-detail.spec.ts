@@ -1,17 +1,17 @@
-import { ResponseDetail } from '../type-defs/internal';
+import { ApiResponse } from '../type-defs';
 import { getResponseDetail } from './get-response-detail';
 
 describe('services/send-response', () => {
   describe('getResponseDetail', () => {
     it('Should return a plain text message', () => {
-      const response: ResponseDetail = getResponseDetail('Hello World');
+      const response: ApiResponse = getResponseDetail('Hello World');
       expect(response.statusCode).toEqual(200);
       expect(response.contentType).toEqual('text/plain');
       expect(response.body).toEqual('Hello World');
     });
 
     it('Should return a number as plain text message', () => {
-      const response: ResponseDetail = getResponseDetail(42);
+      const response: ApiResponse = getResponseDetail(42);
       expect(response.statusCode).toEqual(200);
       expect(response.contentType).toEqual('text/plain');
       expect(response.body).toEqual(42);
@@ -20,7 +20,7 @@ describe('services/send-response', () => {
     it('Should return html', () => {
       const body: string = `<html lang="en"><body>Hello World</body></html>`;
 
-      const response: ResponseDetail = getResponseDetail(body);
+      const response: ApiResponse = getResponseDetail(body);
       expect(response.statusCode).toEqual(200);
       expect(response.contentType).toEqual('text/html');
       expect(response.body).toEqual(body);
@@ -31,7 +31,7 @@ describe('services/send-response', () => {
         name: 'bob'
       };
 
-      const response: ResponseDetail = getResponseDetail(content);
+      const response: ApiResponse = getResponseDetail(content);
       expect(response.statusCode).toEqual(200);
       expect(response.contentType).toEqual('application/json');
       expect(response.body).toEqual(JSON.stringify(content));
@@ -41,7 +41,7 @@ describe('services/send-response', () => {
       const content: any = {
         name: 'bob'
       };
-      const response: ResponseDetail = getResponseDetail(
+      const response: ApiResponse = getResponseDetail(
         content,
         200,
         'text/plain'
@@ -53,21 +53,21 @@ describe('services/send-response', () => {
 
     it('Should return a custom status', () => {
       const content: any = { name: 'bob' };
-      const response: ResponseDetail = getResponseDetail(content, 201);
+      const response: ApiResponse = getResponseDetail(content, 201);
       expect(response.statusCode).toEqual(201);
       expect(response.contentType).toEqual('application/json');
       expect(response.body).toEqual(JSON.stringify(content));
     });
 
     it('Should handle null body', () => {
-      const response: ResponseDetail = getResponseDetail(null, 200);
+      const response: ApiResponse = getResponseDetail(null, 200);
       expect(response.statusCode).toEqual(200);
       expect(response.contentType).toEqual('text/plain');
       expect(response.body).toEqual('');
     });
 
     it('Should handle undefined body', () => {
-      const response: ResponseDetail = getResponseDetail(undefined, 200);
+      const response: ApiResponse = getResponseDetail(undefined, 200);
       expect(response.statusCode).toEqual(200);
       expect(response.contentType).toEqual('text/plain');
       expect(response.body).toEqual('');
@@ -79,7 +79,7 @@ describe('services/send-response', () => {
       };
       content.name = content;
 
-      const response: ResponseDetail = getResponseDetail(content, 200);
+      const response: ApiResponse = getResponseDetail(content, 200);
       expect(response.statusCode).toEqual(500);
       expect(response.contentType).toEqual('text/plain');
       expect(response.body).toEqual('Error parsing object');
@@ -87,7 +87,7 @@ describe('services/send-response', () => {
 
     it('Should update missing content type with header', () => {
       const content: any = { name: 'bob' };
-      const response: ResponseDetail = getResponseDetail(content, 200, '', {
+      const response: ApiResponse = getResponseDetail(content, 200, '', {
         contentType: 'some/media'
       });
 
@@ -96,7 +96,7 @@ describe('services/send-response', () => {
 
     it('Should not update existing content type with header', () => {
       const content: any = { name: 'bob' };
-      const response: ResponseDetail = getResponseDetail(
+      const response: ApiResponse = getResponseDetail(
         content,
         200,
         'selected/media',
