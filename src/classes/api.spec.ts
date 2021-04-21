@@ -8,11 +8,11 @@ import { HttpErrors } from '../errors/http-error-codes';
 import * as Logger from '../services/logger';
 import {
   ApiRequest,
+  ApiResponse,
   AuthenticatorFunc,
   RotiroMiddleware,
   RotiroMiddlewareFunc
 } from '../type-defs';
-import { ResponseDetail } from '../type-defs/internal';
 import { Api } from './api';
 import { Controllers } from './controllers';
 import { Endpoints } from './endpoints';
@@ -480,12 +480,15 @@ describe('classes/api', () => {
     it('Updates meta based on middleware', async () => {
       const middlewareFunc: RotiroMiddlewareFunc = (
         apiRequest: ApiRequest,
-        responseDetail: ResponseDetail
+        apiResponse: ApiResponse
       ) => {
-        if (!apiRequest.meta) {
-          apiRequest.meta = {};
+        if (typeof apiResponse === 'undefined') {
+          // only apply if this pre controller function
+          if (!apiRequest.meta) {
+            apiRequest.meta = {};
+          }
+          apiRequest.meta.something = true;
         }
-        apiRequest.meta.something = true;
       };
       let meta: any;
       const func = async (apiRequest: ApiRequest) => {
@@ -504,7 +507,7 @@ describe('classes/api', () => {
     it('Updates response header with middleware', async () => {
       const middlewareFunc: RotiroMiddlewareFunc = (
         apiRequest: ApiRequest,
-        responseDetail: ResponseDetail
+        responseDetail: ApiResponse
       ) => {
         responseDetail.headers.somethingNew = 'hello';
         responseDetail.contentType = 'something/different';

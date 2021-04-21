@@ -1,4 +1,4 @@
-import { ResponseDetail } from '../type-defs/internal';
+import { ApiResponse } from '../type-defs';
 import { cleanHeaders } from '../utils/request-params/extract-detail';
 
 export function getResponseDetail(
@@ -6,11 +6,11 @@ export function getResponseDetail(
   status: number = 200,
   contentType?: string,
   headers?: Record<string, string>
-): ResponseDetail {
+): ApiResponse {
   if (body === null || typeof body === 'undefined') {
     body = '';
   }
-  const responseDetail: ResponseDetail = {
+  const responseDetail: ApiResponse = {
     body,
     statusCode: status,
     contentType: contentType || '',
