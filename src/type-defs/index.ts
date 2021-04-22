@@ -135,5 +135,5 @@ export interface ApiResponse {
   body: string;
   statusCode: number;
   contentType: string;
-  headers: Record<string, string>;
+  headers: Record<string, string | string[]>;
 }
