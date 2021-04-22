@@ -88,7 +88,7 @@ describe('services/send-response', () => {
     it('Should update missing content type with header', () => {
       const content: any = { name: 'bob' };
       const response: ApiResponse = getResponseDetail(content, 200, '', {
-        contentType: 'some/media'
+        'Content-Type': 'some/media'
       });
 
       expect(response.contentType).toEqual('some/media');

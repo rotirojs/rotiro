@@ -36,7 +36,7 @@ export declare type SendResponse = (
   body: any,
   status?: number,
   contentType?: string,
-  headers?: Record<string, string>
+  headers?: Record<string, string | string[]>
 ) => void;
 
 export type ControlerFunc = (apiRequest: ApiRequest) => void;

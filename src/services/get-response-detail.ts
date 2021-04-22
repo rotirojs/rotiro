@@ -1,4 +1,5 @@
 import { ApiResponse } from '../type-defs';
+import { extractHeaderParam } from '../utils/header-param';
 import { cleanHeaders } from '../utils/request-params/extract-detail';
 
 export function getResponseDetail(
@@ -37,8 +38,13 @@ export function getResponseDetail(
 
   // if no contentType was set then check the headers and copy the
   // contentType over
-  if (!contentType && responseDetail.headers.contenttype) {
-    responseDetail.contentType = responseDetail.headers.contenttype;
+  const existingContentTypeHeaderValue: string = extractHeaderParam(
+    'Content-Type',
+    responseDetail.headers
+  ) as string;
+
+  if (!contentType && existingContentTypeHeaderValue) {
+    responseDetail.contentType = existingContentTypeHeaderValue;
   }
 
   return responseDetail;
