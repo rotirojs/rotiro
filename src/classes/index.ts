@@ -2,3 +2,4 @@
 export * from './api';
 export * from './controllers';
 export * from './endpoints';
+export * from './routes';
