@@ -55,6 +55,7 @@ export function createRequest(
     path: pathParams,
     body,
     query,
+    handleAuthFail: methodSchema.handleAuthFail,
     headers: headers || {},
     meta: {},
     send: {} as SendResponse // stub out func until replaced

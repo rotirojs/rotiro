@@ -8,6 +8,7 @@ export interface ApiRequest {
   method: RestMethods; // GET etc
   valid: boolean; // is request valid e.g. all params have passed
   authTokenValue?: string;
+  handleAuthFail?: boolean;
   authenticated: boolean; // Is the request authenticated or not
   meta: any; // auth details - probably going to be generic e.g. include user stuff
   path: Record<string, ApiRequestParam>;
@@ -53,6 +54,7 @@ export interface ApiEndpointSchema extends RouteNamePattern {
 
 export interface MethodSchema {
   auth?: string;
+  handleAuthFail?: boolean;
   bodyParams?: MethodSchemaParam[];
   queryParams?: MethodSchemaParam[];
   strict?: boolean;
