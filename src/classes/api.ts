@@ -122,9 +122,15 @@ export class Api {
       );
       apiRequest.authenticated = await authenticator(apiRequest);
       if (!apiRequest.authenticated) {
-        // throw an error
-        logger.error('Authentication failed');
-        middleware.sendResponse(HttpErrors[401], 401, 'text/plain');
+        if (!apiRequest.handleAuthFail) {
+          // throw an error
+          logger.error('Authentication failed');
+          middleware.sendResponse(HttpErrors[401], 401, 'text/plain');
+          return;
+        } else {
+          // remove this prop as it is not needed now
+          delete apiRequest.handleAuthFail;
+        }
       }
     }
 

@@ -444,6 +444,23 @@ describe('classes/api', () => {
         'text/plain'
       );
     });
+
+    it('Should not return 401 status if not authenticated with handleAuthFail set', async () => {
+      api.endpoints.add('pingy', '/ping', {
+        GET: { auth: 'authToken', handleAuthFail: true }
+      });
+      api.controllers.add('pingy', 'GET', controllerFunc);
+      api.build();
+
+      await Api.handleRequest(api, middleware);
+      const calledWith: any = controllerFunc.mock.calls[0][0];
+      expect(calledWith.handleAuthFail).toBeFalsy();
+      expect(middleware.sendResponse).not.toBeCalledWith(
+        HttpErrors[401],
+        401,
+        'text/plain'
+      );
+    });
   });
 
   describe('Middlewares', () => {
