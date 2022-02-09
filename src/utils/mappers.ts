@@ -29,11 +29,15 @@ export function numberMapper(
   }
 }
 
-export function jsonMapper(text: string | string[]): object | object[] {
+export function jsonMapper(text: string | string[] | any[]): object | object[] {
   if (Array.isArray(text)) {
     const mappedValues: object[] = [];
-    for (const textValue of text) {
-      mappedValues.push(JSON.parse(textValue));
+    for (const item of text) {
+      if (typeof item === 'string') {
+        mappedValues.push(JSON.parse(item));
+      } else {
+        mappedValues.push(item);
+      }
     }
     return mappedValues;
   } else {
