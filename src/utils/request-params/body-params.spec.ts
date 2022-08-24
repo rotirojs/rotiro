@@ -104,6 +104,24 @@ describe('utils/request-params/body-params', () => {
         });
       });
 
+      it('Should match an object array parameter in the body', () => {
+        body.fields = [{ name: 'case' }];
+        bodySchema = [{ type: 'json', name: 'fields', array: true }];
+        const result: Record<string, ApiRequestParam> = getBodyParams(
+          body,
+          bodySchema,
+          mappers
+        );
+        expect(result).toEqual({
+          fields: {
+            name: 'fields',
+            type: 'json',
+            valid: true,
+            value: [{ name: 'case' }]
+          }
+        });
+      });
+
       it('Should match a multiple parameters in the body', () => {
         body = { id: 'test', value1: 'red', value2: 3 };
         bodySchema.push({ type: 'string', name: 'value1' });

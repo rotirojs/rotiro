@@ -414,7 +414,7 @@ describe('classes/api', () => {
           headers: {}
         }
       };
-      const authFunc: AuthenticatorFunc = async apiRequest => {
+      const authFunc: AuthenticatorFunc = async (apiRequest) => {
         return apiRequest.routeName === 'ping';
       };
 
@@ -489,9 +489,12 @@ describe('classes/api', () => {
       api.build();
 
       await Api.handleRequest(api, middleware);
-      expect(Logger.logger.error).toBeCalledWith(
-        `Error calling middleware: Cannot read property 'call' of undefined`
-      );
+      expect(Logger.logger.error).toBeCalledTimes(2);
+      expect(
+        (Logger.logger.error as any).mock.calls[0][0].startsWith(
+          'Error calling middleware:'
+        )
+      ).toEqual(true);
     });
 
     it('Updates meta based on middleware', async () => {
