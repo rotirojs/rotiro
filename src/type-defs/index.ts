@@ -40,7 +40,7 @@ export declare type SendResponse = (
   headers?: Record<string, string | string[]>
 ) => void;
 
-export type ControlerFunc = (apiRequest: ApiRequest) => void;
+export type ControllerFunc = (apiRequest: ApiRequest) => void | Promise<void>;
 
 export type AuthenticatorFunc = (apiRequest: ApiRequest) => Promise<boolean>;
 
@@ -92,7 +92,7 @@ export interface RouteMethod {
   auth?: string;
   body?: Record<string, RouteParameter>;
   query?: Record<string, RouteParameter>;
-  controller: ControlerFunc;
+  controller: ControllerFunc;
   meta?: RouteMeta;
   strict?: boolean; // only load query parameters that are defined in schema
 }
