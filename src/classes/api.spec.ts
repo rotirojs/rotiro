@@ -490,7 +490,7 @@ describe('classes/api', () => {
 
       await Api.handleRequest(api, middleware);
       expect(Logger.logger.error).toBeCalledWith(
-        `Error calling middleware: Cannot read property 'call' of undefined`
+        `Error calling middleware: Cannot read properties of undefined (reading 'call')`
       );
     });
 
