@@ -359,7 +359,7 @@ describe('classes/api', () => {
       api.build();
       await Api.handleRequest(api, middleware);
       expect(middleware.sendResponse).toBeCalledWith(
-        { name: 'error' },
+        JSON.stringify({ name: 'error' }),
         400,
         'application/json'
       );
