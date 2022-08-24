@@ -1,11 +1,11 @@
 import { RotiroError } from '../errors';
 import { createError, ErrorCodes } from '../errors/error-codes';
-import { ApiRequest, ControlerFunc } from '../type-defs';
+import { ApiRequest, ControllerFunc } from '../type-defs';
 import { Controllers } from './controllers';
 
 describe('classes/controllers', () => {
   let controllers: Controllers;
-  const func: ControlerFunc = (req: ApiRequest) => {
+  const func: ControllerFunc = (req: ApiRequest) => {
     /* do nothing */
   };
 
@@ -54,7 +54,7 @@ describe('classes/controllers', () => {
     });
 
     it('Should add multiple methds to a  controllers', () => {
-      const func2: ControlerFunc = (req: ApiRequest) => {
+      const func2: ControllerFunc = (req: ApiRequest) => {
         /* do nothing */
       };
       controllers.add('bob', 'GET', func);

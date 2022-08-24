@@ -1,8 +1,8 @@
 import { createError, ErrorCodes } from '../errors/error-codes';
-import { ControlerFunc, RestMethods } from '../type-defs';
+import { ControllerFunc, RestMethods } from '../type-defs';
 
 export class Controllers {
-  private controllers: Record<string, Record<string, ControlerFunc>> = {};
+  private controllers: Record<string, Record<string, ControllerFunc>> = {};
   private _locked: boolean = false;
 
   public get locked(): boolean {
@@ -16,7 +16,7 @@ export class Controllers {
   public add(
     routeName: string,
     method: RestMethods,
-    controller: ControlerFunc
+    controller: ControllerFunc
   ) {
     if (this._locked) {
       throw createError(ErrorCodes.ApiLocked);
@@ -51,7 +51,7 @@ export class Controllers {
     return errors;
   }
 
-  public get(routeName: string, method: RestMethods): ControlerFunc {
+  public get(routeName: string, method: RestMethods): ControllerFunc {
     const controllers = this.controllers[routeName];
     if (controllers) {
       return controllers[method];
