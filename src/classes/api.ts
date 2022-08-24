@@ -81,7 +81,6 @@ export class Api {
     logger.debug(`Extracted method: ${method}`);
     logger.display('Extracted body', body);
     logger.debug(`Extracted fullPath: ${fullPath}`);
-    logger.display('Extracted headers', headers);
 
     let apiRequest: ApiRequest;
     try {
@@ -95,7 +94,6 @@ export class Api {
       );
       apiRequest.originalRequest = originalRequest;
       applyMeta(apiRequest, meta);
-      logger.display('Api Request', apiRequest);
     } catch (ex) {
       logger.error(`Create request error: ${ex}`);
       Api.handleRouteError(
