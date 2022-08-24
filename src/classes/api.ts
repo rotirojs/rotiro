@@ -193,14 +193,18 @@ export class Api {
         logger.error(
           `Sending RotiroErrorResponse with status ${responseError.status}`
         );
-        // TODO Set content type correctly
+
+        let contentType:string='text/plain'
+        if (responseError.content && typeof responseError.content ==='object'){
+          contentType='application/json'
+        }
         sendResponse(
           responseError.content ||
             responseError.message ||
             HttpErrors[responseError.status] ||
             'Api Error',
           responseError.status,
-          'text/plain'
+          contentType
         );
 
         return;

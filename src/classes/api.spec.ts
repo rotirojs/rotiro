@@ -361,7 +361,7 @@ describe('classes/api', () => {
       expect(middleware.sendResponse).toBeCalledWith(
         { name: 'error' },
         400,
-        'text/plain'
+        'application/json'
       );
     });
 
