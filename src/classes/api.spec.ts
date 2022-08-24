@@ -489,9 +489,16 @@ describe('classes/api', () => {
       api.build();
 
       await Api.handleRequest(api, middleware);
-      expect(Logger.logger.error).toBeCalledWith(
-        `Error calling middleware: Cannot read properties of undefined (reading 'call')`
-      );
+      /*
+      * The actual error returned appears to change depending on environment
+      * Error calling middleware: Cannot read properties of undefined (reading 'call')
+      * Error calling middleware: Cannot read property 'call' of undefined
+      * Test the call rather than the actual message
+      * */
+
+      expect((Logger.logger.error as any).mock.calls[0][0]
+        .startsWith('Error calling middleware: '))
+        .toBeTruthy()
     });
 
     it('Updates meta based on middleware', async () => {
