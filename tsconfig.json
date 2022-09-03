@@ -14,9 +14,9 @@
     "noImplicitThis": false,
     "strictNullChecks": true,
     "preserveConstEnums": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "outDir": "./lib",
     "baseUrl": "./",
     "paths": {}
