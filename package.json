@@ -1,6 +1,6 @@
 {
   "name": "rotiro",
-  "version": "1.0.44",
+  "version": "1.0.45",
   "description": "Rotiro API Middleware",
   "author": "Alex Everitt",
   "scripts": {
@@ -9,6 +9,7 @@
     "clear-build": "rm -rf lib/*",
     "build": "rm -rf lib/* && tsc",
     "prepublishOnly": "rm -rf lib/* && tsc",
+    "run-prettier": "yarn prettier --write .",
     "lint": "./node_modules/.bin/tslint -c tslint.json 'src/**/*.ts'",
     "lint-fix": "./node_modules/.bin/tslint -c tslint.json 'src/**/*.ts' --fix"
   },
@@ -24,7 +25,7 @@
     "@types/jest": "^24.9.1",
     "@types/node": "^14.14.5",
     "jest": "^26.6.3",
-    "prettier": "^1.19.1",
+    "prettier": "^2.7.1",
     "ts-jest": "^26.4.4",
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",

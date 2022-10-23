@@ -20,7 +20,6 @@ jobs:
       - run:
           environment:
             NODE_OPTIONS: --max_old_space_size=4096
-          command:
-            yarn install && yarn test:ci
+          command: yarn install && yarn test:ci
       - codecov/upload:
           file: './coverage/clover.xml'

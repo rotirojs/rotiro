@@ -1,0 +1,10 @@
+**/.nuxt/
+**/node_modules/
+**/coverage/
+**/_dist/
+**/lib/
+**/builds
+**/_nuxt
+.idea
+**/.next/
+**/dump

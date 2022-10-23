@@ -1,29 +1,15 @@
 {
   "defaultSeverity": "error",
-  "extends": [
-    "tslint:recommended",
-    "tslint-config-prettier"
-  ],
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
   "jsRules": {},
   "rules": {
-    "interface-name": [
-      false,
-      "never-prefix"
-    ],
+    "interface-name": [false, "never-prefix"],
     "no-var-requires": false,
     "object-literal-sort-keys": false,
-    "variable-name": [
-      false,
-      "check-format",
-      "allow-leading-underscore"
-    ]
+    "variable-name": [false, "check-format", "allow-leading-underscore"]
   },
   "rulesDirectory": [],
   "linterOptions": {
-    "exclude": [
-      "node_modules/**",
-      "**/node_modules/**",
-      "**/lib/**"
-    ]
+    "exclude": ["node_modules/**", "**/node_modules/**", "**/lib/**"]
   }
 }
