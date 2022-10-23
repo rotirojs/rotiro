@@ -14,7 +14,5 @@ module.exports = {
     '^.+\\.js$': 'babel-jest'
   },
   collectCoverage: true,
-  collectCoverageFrom: [
-    '<rootDir>/src/**/*.ts'
-  ],
-}
+  collectCoverageFrom: ['<rootDir>/src/**/*.ts']
+};

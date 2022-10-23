@@ -1,9 +1,9 @@
-import {Endpoints} from '../../classes';
-import {Mappers} from '../../classes/mappers';
-import {RotiroError} from '../../errors';
-import {createError, ErrorCodes} from '../../errors/error-codes';
-import {ApiEndpointSchema} from '../../type-defs';
-import {getPathParams, setParameterOrder} from './path-params';
+import { Endpoints } from '../../classes';
+import { Mappers } from '../../classes/mappers';
+import { RotiroError } from '../../errors';
+import { createError, ErrorCodes } from '../../errors/error-codes';
+import { ApiEndpointSchema } from '../../type-defs';
+import { getPathParams, setParameterOrder } from './path-params';
 
 describe('utils/request-params/path-params', () => {
   let mappers;
@@ -53,7 +53,10 @@ describe('utils/request-params/path-params', () => {
         'userId',
         '/user/:id/items/:color',
         ['GET'],
-        [{ name: 'id', type: 'number' }, { name: 'color', type: 'string' }]
+        [
+          { name: 'id', type: 'number' },
+          { name: 'color', type: 'string' }
+        ]
       );
 
       const result = getPathParams(path, endpoint, mappers);
@@ -117,55 +120,99 @@ describe('utils/request-params/path-params', () => {
 
   describe('setParameterOrder', () => {
     it('should map parameter names when defined in order', () => {
-      const endpoint:any={path:'/test/:param1/stuff/:param2',pathParams:[{name:'param1',type:'string'},{name:'param2',type:'string'}]}
-      setParameterOrder(endpoint)
+      const endpoint: any = {
+        path: '/test/:param1/stuff/:param2',
+        pathParams: [
+          { name: 'param1', type: 'string' },
+          { name: 'param2', type: 'string' }
+        ]
+      };
+      setParameterOrder(endpoint);
 
-      expect(endpoint.pathParams).toEqual([{name:'param1',type:'string'},{name:'param2',type:'string'}])
+      expect(endpoint.pathParams).toEqual([
+        { name: 'param1', type: 'string' },
+        { name: 'param2', type: 'string' }
+      ]);
     });
 
     it('should map parameter names when defined in the wrong order', () => {
-      const endpoint:any={path:'/test/:param1/stuff/:param2',pathParams:[{name:'param2',type:'string'},{name:'param1',type:'string'}]}
-      setParameterOrder(endpoint)
+      const endpoint: any = {
+        path: '/test/:param1/stuff/:param2',
+        pathParams: [
+          { name: 'param2', type: 'string' },
+          { name: 'param1', type: 'string' }
+        ]
+      };
+      setParameterOrder(endpoint);
 
-      expect(endpoint.pathParams).toEqual([{name:'param1',type:'string'},{name:'param2',type:'string'}])
+      expect(endpoint.pathParams).toEqual([
+        { name: 'param1', type: 'string' },
+        { name: 'param2', type: 'string' }
+      ]);
     });
 
     it('should map parameter names when url includes file ext', () => {
-      const endpoint:any={path:'/test/:param1/stuff/:param2.png',pathParams:[{name:'param2',type:'string'},{name:'param1',type:'string'}]}
-      setParameterOrder(endpoint)
+      const endpoint: any = {
+        path: '/test/:param1/stuff/:param2.png',
+        pathParams: [
+          { name: 'param2', type: 'string' },
+          { name: 'param1', type: 'string' }
+        ]
+      };
+      setParameterOrder(endpoint);
 
-      expect(endpoint.pathParams).toEqual([{name:'param1',type:'string'},{name:'param2',type:'string'}])
+      expect(endpoint.pathParams).toEqual([
+        { name: 'param1', type: 'string' },
+        { name: 'param2', type: 'string' }
+      ]);
     });
 
     it('should map parameter names are adjacent', () => {
-      const endpoint:any={path:'/test/:param1/:param2',pathParams:[{name:'param2',type:'string'},{name:'param1',type:'string'}]}
-      setParameterOrder(endpoint)
+      const endpoint: any = {
+        path: '/test/:param1/:param2',
+        pathParams: [
+          { name: 'param2', type: 'string' },
+          { name: 'param1', type: 'string' }
+        ]
+      };
+      setParameterOrder(endpoint);
 
-      expect(endpoint.pathParams).toEqual([{name:'param1',type:'string'},{name:'param2',type:'string'}])
+      expect(endpoint.pathParams).toEqual([
+        { name: 'param1', type: 'string' },
+        { name: 'param2', type: 'string' }
+      ]);
     });
 
     it('should map parameter names when defined in mixed order', () => {
-      const endpoint:any={path:'/test/:param1/stuff/:param2/:param3/sdf/:param4',pathParams:[{name:'param2',type:'string'},{name:'param4',type:'string'},{name:'param1',type:'string'},{name:'param3',type:'string'}]}
-      setParameterOrder(endpoint)
+      const endpoint: any = {
+        path: '/test/:param1/stuff/:param2/:param3/sdf/:param4',
+        pathParams: [
+          { name: 'param2', type: 'string' },
+          { name: 'param4', type: 'string' },
+          { name: 'param1', type: 'string' },
+          { name: 'param3', type: 'string' }
+        ]
+      };
+      setParameterOrder(endpoint);
 
       expect(endpoint.pathParams).toEqual([
         {
-          "name": "param1",
-          "type": "string"
+          name: 'param1',
+          type: 'string'
         },
         {
-          "name": "param2",
-          "type": "string"
+          name: 'param2',
+          type: 'string'
         },
         {
-          "name": "param3",
-          "type": "string"
+          name: 'param3',
+          type: 'string'
         },
         {
-          "name": "param4",
-          "type": "string"
+          name: 'param4',
+          type: 'string'
         }
-      ])
+      ]);
     });
   });
 });

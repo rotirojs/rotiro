@@ -1,13 +1,13 @@
-import {RotiroErrorResponse} from '../errors';
+import { RotiroErrorResponse } from '../errors';
 import {
   createError,
   ErrorCodes,
   RotiroErrorCode
 } from '../errors/error-codes';
-import {HttpErrors} from '../errors/http-error-codes';
-import {createRequest} from '../services/create-request';
-import {getResponseDetail} from '../services/get-response-detail';
-import {logger} from '../services/logger';
+import { HttpErrors } from '../errors/http-error-codes';
+import { createRequest } from '../services/create-request';
+import { getResponseDetail } from '../services/get-response-detail';
+import { logger } from '../services/logger';
 import {
   ApiOptions,
   ApiRequest,
@@ -18,15 +18,15 @@ import {
   RotiroMiddlewareFunc,
   SendResponse
 } from '../type-defs';
-import {ExtractedRequestDetail} from '../type-defs/internal';
-import {cleanBasePath} from '../utils';
-import {getAuthToken} from '../utils/auth-token';
-import {extractRequestDetails} from '../utils/request-params/extract-detail';
-import {Authenticators} from './authenticators';
-import {Controllers} from './controllers';
-import {Endpoints} from './endpoints';
-import {Mappers} from './mappers';
-import {Routes} from './routes';
+import { ExtractedRequestDetail } from '../type-defs/internal';
+import { cleanBasePath } from '../utils';
+import { getAuthToken } from '../utils/auth-token';
+import { extractRequestDetails } from '../utils/request-params/extract-detail';
+import { Authenticators } from './authenticators';
+import { Controllers } from './controllers';
+import { Endpoints } from './endpoints';
+import { Mappers } from './mappers';
+import { Routes } from './routes';
 
 export class Api {
   public get controllers(): Controllers {
@@ -194,21 +194,21 @@ export class Api {
           `Sending RotiroErrorResponse with status ${responseError.status}`
         );
 
-        let contentType: string = 'text/plain'
-        let content: any = responseError.content
+        let contentType: string = 'text/plain';
+        let content: any = responseError.content;
         if (content && typeof responseError.content === 'object') {
-          contentType = 'application/json'
+          contentType = 'application/json';
           try {
-            content = JSON.stringify(responseError.content)
+            content = JSON.stringify(responseError.content);
           } catch (ex) {
-            contentType = responseError.content
+            contentType = responseError.content;
           }
         }
         sendResponse(
           content ||
-          responseError.message ||
-          HttpErrors[responseError.status] ||
-          'Api Error',
+            responseError.message ||
+            HttpErrors[responseError.status] ||
+            'Api Error',
           responseError.status,
           contentType
         );
@@ -264,9 +264,8 @@ export class Api {
     // prevent any updates to controller etc
 
     const endpointNames = this._endpoints.getRoutesAndMethods();
-    const controllerErrors: string[] = this._controllers.validateControllers(
-      endpointNames
-    );
+    const controllerErrors: string[] =
+      this._controllers.validateControllers(endpointNames);
 
     if (controllerErrors.length) {
       throw createError(ErrorCodes.ControllerMissing, controllerErrors);
@@ -275,9 +274,8 @@ export class Api {
     const authTokens: string[] = this._endpoints.getAuthTokenNames();
     if (authTokens.length) {
       // validate they all exists
-      const authenticatorErrors = this.authenticators.validateAuthenticators(
-        authTokens
-      );
+      const authenticatorErrors =
+        this.authenticators.validateAuthenticators(authTokens);
       if (authenticatorErrors.length) {
         throw createError(ErrorCodes.UnassignedAuthToken, authenticatorErrors);
       }

@@ -51,9 +51,10 @@ export function sanitisePath(path: string): string {
   return routePath;
 }
 
-export function splitFullPath(
-  fullPath: string
-): { path: string; query: string } {
+export function splitFullPath(fullPath: string): {
+  path: string;
+  query: string;
+} {
   let path: string = fullPath;
   let query: string = '';
   if (fullPath.indexOf('?') > -1) {

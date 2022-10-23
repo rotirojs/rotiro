@@ -10,7 +10,7 @@ export function getPathParams(
   const pathParams: Record<string, ApiRequestParam> = {};
 
   if (endpoint.pathParams && endpoint.pathParams.length) {
-    setParameterOrder(endpoint)
+    setParameterOrder(endpoint);
     // get the names and values from the path
     let params: string[] | null = path.match(endpoint.pattern);
     if (!params) {
@@ -34,33 +34,31 @@ export function getPathParams(
   return pathParams;
 }
 
-
-export function setParameterOrder(endpoint: ApiEndpointSchema):void{
+export function setParameterOrder(endpoint: ApiEndpointSchema): void {
   if (endpoint.pathParams && endpoint.pathParams.length) {
-    const pathParts: string[] = endpoint.path.split('/')
+    const pathParts: string[] = endpoint.path.split('/');
     const pathOrder: string[] = [];
 
-    const pathParams: Record<string, any> = {}
-      for (const pathParam of endpoint.pathParams)    {
-        pathParams[pathParam.name]=pathParam;
-      }
-
-      for (const part of pathParts) {
-
-        if (part.startsWith(':')) {
-          let pathPart: string = part
-          const sepPos: number = pathPart.indexOf('.')
-          if (sepPos > -1) {
-            pathPart = pathPart.substring(0, sepPos)
-          }
-          pathOrder.push(pathPart.substring(1))
-        }
-      }
-
-      const updatePathParams:any[]=[]
-    for (const pathOrderItem of pathOrder){
-      updatePathParams.push(pathParams[pathOrderItem])
+    const pathParams: Record<string, any> = {};
+    for (const pathParam of endpoint.pathParams) {
+      pathParams[pathParam.name] = pathParam;
     }
-      endpoint.pathParams=updatePathParams
+
+    for (const part of pathParts) {
+      if (part.startsWith(':')) {
+        let pathPart: string = part;
+        const sepPos: number = pathPart.indexOf('.');
+        if (sepPos > -1) {
+          pathPart = pathPart.substring(0, sepPos);
+        }
+        pathOrder.push(pathPart.substring(1));
+      }
+    }
+
+    const updatePathParams: any[] = [];
+    for (const pathOrderItem of pathOrder) {
+      updatePathParams.push(pathParams[pathOrderItem]);
+    }
+    endpoint.pathParams = updatePathParams;
   }
 }
