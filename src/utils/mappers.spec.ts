@@ -1,4 +1,9 @@
-import { jsonMapper, numberMapper, stringMapper } from './mappers';
+import {
+  booleanMapper,
+  jsonMapper,
+  numberMapper,
+  stringMapper
+} from './mappers';
 
 describe('utils/mappers', () => {
   describe('stringMapper', () => {
@@ -55,6 +60,20 @@ describe('utils/mappers', () => {
       expect(numberMapper('asdf')).toEqual(undefined);
     });
   });
+  describe('booleanMapper', () => {
+    it('string to be returned as boolean', () => {
+      expect(booleanMapper('true')).toEqual(true);
+    });
+
+    it('string array to be returned as boolean array', () => {
+      expect(booleanMapper(['true', 'false'])).toEqual([true, false]);
+    });
+
+    it('case insensitive string to be returned as boolean', () => {
+      expect(booleanMapper('True')).toEqual(true);
+    });
+  });
+
   describe('jsonMapper', () => {
     it('return object from json string', () => {
       expect(jsonMapper('{"name":"Bob"}')).toEqual({ name: 'Bob' });
