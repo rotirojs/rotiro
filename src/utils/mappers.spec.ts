@@ -72,6 +72,14 @@ describe('utils/mappers', () => {
     it('case insensitive string to be returned as boolean', () => {
       expect(booleanMapper('True')).toEqual(true);
     });
+
+    it('boolean to be returned as boolean', () => {
+      expect(booleanMapper(true)).toEqual(true);
+    });
+
+    it('boolean array to be returned as boolean array', () => {
+      expect(booleanMapper([true, false])).toEqual([true, false]);
+    });
   });
 
   describe('jsonMapper', () => {

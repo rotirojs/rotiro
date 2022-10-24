@@ -13,15 +13,22 @@ export function stringMapper(text: any | any[]): string | string[] {
 }
 
 export function booleanMapper(
-  text: string | string[]
+  text: string | string[] | boolean | boolean[]
 ): boolean | boolean[] | undefined {
   if (Array.isArray(text)) {
     const mappedValues: boolean[] = [];
     for (const textValue of text) {
-      mappedValues.push(trimString(textValue).toLowerCase() === 'true');
+      if (typeof textValue === 'boolean') {
+        mappedValues.push(textValue);
+      } else {
+        mappedValues.push(trimString(textValue).toLowerCase() === 'true');
+      }
     }
     return mappedValues;
   } else {
+    if (typeof text === 'boolean') {
+      return text;
+    }
     return trimString(text).toLowerCase() === 'true';
   }
 }
