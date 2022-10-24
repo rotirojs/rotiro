@@ -1,6 +1,11 @@
 import { createError, ErrorCodes } from '../errors/error-codes';
 import { DataMapperFunc } from '../type-defs';
-import { jsonMapper, numberMapper, stringMapper } from '../utils/mappers';
+import {
+  booleanMapper,
+  jsonMapper,
+  numberMapper,
+  stringMapper
+} from '../utils/mappers';
 
 export class Mappers {
   public get locked(): boolean {
@@ -42,6 +47,7 @@ export class Mappers {
   private registerDefaultMappers(): void {
     this.registerMapper('string', stringMapper);
     this.registerMapper('number', numberMapper);
+    this.registerMapper('boolean', booleanMapper);
     this.registerMapper('json', jsonMapper);
   }
 }

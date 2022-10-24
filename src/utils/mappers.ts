@@ -1,3 +1,5 @@
+import { trimString } from './text';
+
 export function stringMapper(text: any | any[]): string | string[] {
   if (text === null || typeof text === 'undefined') {
     text = '';
@@ -8,6 +10,20 @@ export function stringMapper(text: any | any[]): string | string[] {
   }
 
   return text;
+}
+
+export function booleanMapper(
+  text: string | string[]
+): boolean | boolean[] | undefined {
+  if (Array.isArray(text)) {
+    const mappedValues: boolean[] = [];
+    for (const textValue of text) {
+      mappedValues.push(trimString(textValue).toLowerCase() === 'true');
+    }
+    return mappedValues;
+  } else {
+    return trimString(text).toLowerCase() === 'true';
+  }
 }
 
 export function numberMapper(
